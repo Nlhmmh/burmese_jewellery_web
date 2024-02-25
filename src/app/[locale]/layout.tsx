@@ -24,7 +24,7 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} data-theme="light">
       <body className={inter.className}>
-        <Navbar />
+        <Navbar params={{ locale: locale }} />
         <div className="m-5">{children}</div>
       </body>
     </html>

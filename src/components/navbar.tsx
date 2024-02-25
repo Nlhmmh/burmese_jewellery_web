@@ -1,7 +1,8 @@
+import { Props } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 
-const Navbar = () => {
+export default function NavBar({ params: { locale } }: Props) {
   return (
     <header>
       <div className="navbar bg-primary text-white p-3">
@@ -19,13 +20,13 @@ const Navbar = () => {
         <div className="flex-none gap-2">
           <ul className="menu menu-horizontal px-1">
             <li>
-              <Link href="/admin/dashboard">Admin</Link>
+              <Link href={`/${locale}/admin/dashboard`}>Admin</Link>
             </li>
             <li>
-              <Link href="/login">Login</Link>
+              <Link href={`/${locale}/login`}>Login</Link>
             </li>
             <li>
-              <Link href="/Register">Register</Link>
+              <Link href={`/${locale}/register`}>Register</Link>
             </li>
           </ul>
           <div className="dropdown dropdown-end">
@@ -63,6 +64,4 @@ const Navbar = () => {
       </div>
     </header>
   );
-};
-
-export default Navbar;
+}
