@@ -1,10 +1,11 @@
 import Navbar from "@/components/navbar";
 import cfg from "@/config";
 import type { Metadata } from "next";
-import { unstable_setRequestLocale } from "next-intl/server";
+import { getMessages, unstable_setRequestLocale } from "next-intl/server";
 import { Inter } from "next/font/google";
 import "../globals.css";
 import { PageProps } from "../../types";
+import { NextIntlClientProvider } from "next-intl";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,11 +22,14 @@ export default async function LocaleLayout({
   params: { locale },
 }: PageProps) {
   unstable_setRequestLocale(locale);
+  const messages = await getMessages();
   return (
     <html lang={locale} data-theme="light">
       <body className={inter.className}>
-        <Navbar params={{ locale: locale }} />
-        <div className="m-5">{children}</div>
+        <NextIntlClientProvider messages={messages}>
+          <Navbar params={{ locale: locale }} />
+          <div className="m-5">{children}</div>
+        </NextIntlClientProvider>
       </body>
     </html>
   );
