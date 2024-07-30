@@ -8,10 +8,20 @@ Burmese Jewellery Website
 ```
 make run
 ```
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-### i18n
-https://next-intl-docs.vercel.app/docs/getting-started/app-router
-https://github.com/amannn/next-intl/tree/main/examples/example-app-router
+### Framework
+React Expo
+### Documentation
+https://naylinhtet.atlassian.net/wiki/spaces/BJ1/pages/7045123/Page+List
+### UI Library
+https://akveo.github.io/react-native-ui-kitten/docs/components/components-overview <-- **InUse**
+https://callstack.github.io/react-native-paper/docs/guides/getting-started/
+https://reactnativeelements.com/docs
+https://gluestack.io/ui/docs/components/all-components
+https://shoutem.github.io/docs/ui-toolkit/components/typography
+https://magnus-ui.com/docs/getting-started/
+### Icons
+https://github.com/oblador/react-native-vector-icons?tab=readme-ov-file#react-native-vector-icons
+https://feathericons.com/ <-- **InUse**
 
 ---
 

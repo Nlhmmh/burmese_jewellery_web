@@ -1,3 +1,4 @@
+import { Icon } from "@ui-kitten/components";
 import { t } from "i18next";
 import { Text, View } from "react-native";
 
@@ -5,6 +6,7 @@ export default function HomeScreen() {
   return (
     <View>
       <Text>{t("home-title")}</Text>
+      <Icon name="activity" pack="feather" />
     </View>
   );
 }
