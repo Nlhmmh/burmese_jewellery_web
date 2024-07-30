@@ -12,4 +12,4 @@ init: ## Prepare Environment
 
 .PHONY: run
 run: ## Run server
-	npm run dev
+	npm run web
