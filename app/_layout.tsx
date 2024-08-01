@@ -1,4 +1,5 @@
 import { default as myTheme } from "@/assets/custom-theme.json";
+import { SessionProvider } from "@/auth/ctx";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import "@/i18n";
 import { FeatherIconsPack } from "@/icons/feather-icons";
@@ -33,8 +34,8 @@ export default function RootLayout() {
     ...PaperDefaultTheme,
     colors: {
       ...PaperDefaultTheme.colors,
-      primary: myTheme["color-primary-500"],
-      secondary: myTheme["color-secondary-500"],
+      primary: myTheme["color-secondary-500"],
+      secondary: myTheme["color-primary-500"],
     },
   };
 
@@ -44,27 +45,29 @@ export default function RootLayout() {
 
   if (!loaded) return null;
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <PaperProvider theme={theme}>
-        <IconRegistry icons={[EvaIconsPack, FeatherIconsPack]} />
-        <ApplicationProvider
-          {...eva}
-          theme={{
-            ...(colorScheme === "dark" ? eva.dark : eva.light),
-            ...myTheme,
-          }}
-        >
-          <ThemeProvider
-            value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+    <SessionProvider>
+      <SafeAreaView style={{ flex: 1 }}>
+        <PaperProvider theme={theme}>
+          <IconRegistry icons={[EvaIconsPack, FeatherIconsPack]} />
+          <ApplicationProvider
+            {...eva}
+            theme={{
+              ...(colorScheme === "dark" ? eva.dark : eva.light),
+              ...myTheme,
+            }}
           >
-            <Stack>
-              <Stack.Screen name="(app)" options={{ headerShown: false }} />
-              <Stack.Screen name="admin" options={{ headerShown: false }} />
-              <Stack.Screen name="+not-found" />
-            </Stack>
-          </ThemeProvider>
-        </ApplicationProvider>
-      </PaperProvider>
-    </SafeAreaView>
+            <ThemeProvider
+              value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+            >
+              <Stack>
+                <Stack.Screen name="(app)" options={{ headerShown: false }} />
+                <Stack.Screen name="admin" options={{ headerShown: false }} />
+                <Stack.Screen name="+not-found" />
+              </Stack>
+            </ThemeProvider>
+          </ApplicationProvider>
+        </PaperProvider>
+      </SafeAreaView>
+    </SessionProvider>
   );
 }
