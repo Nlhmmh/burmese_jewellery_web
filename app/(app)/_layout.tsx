@@ -4,7 +4,8 @@ import { AppNavBar } from "./AppNavBar";
 export default function HomeLayout() {
   return (
     <>
-      <AppNavBar /> <Slot />
+      <AppNavBar />
+      <Slot />
     </>
   );
 }

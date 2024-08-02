@@ -3,6 +3,8 @@ import { SessionProvider } from "@/auth/ctx";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import "@/i18n";
 import { FeatherIconsPack } from "@/icons/feather-icons";
+import { MaterialCommunityIconsPack } from "@/icons/material-community-icons";
+import { FontAwesomeIconsPack } from "@/icons/font-awesome-icons";
 import * as eva from "@eva-design/eva";
 import {
   DarkTheme,
@@ -34,8 +36,8 @@ export default function RootLayout() {
     ...PaperDefaultTheme,
     colors: {
       ...PaperDefaultTheme.colors,
-      primary: myTheme["color-secondary-500"],
-      secondary: myTheme["color-primary-500"],
+      primary: myTheme["color-primary-500"],
+      secondary: myTheme["color-primary-600"],
     },
   };
 
@@ -48,7 +50,14 @@ export default function RootLayout() {
     <SessionProvider>
       <SafeAreaView style={{ flex: 1 }}>
         <PaperProvider theme={theme}>
-          <IconRegistry icons={[EvaIconsPack, FeatherIconsPack]} />
+          <IconRegistry
+            icons={[
+              EvaIconsPack,
+              FeatherIconsPack,
+              MaterialCommunityIconsPack,
+              FontAwesomeIconsPack,
+            ]}
+          />
           <ApplicationProvider
             {...eva}
             theme={{

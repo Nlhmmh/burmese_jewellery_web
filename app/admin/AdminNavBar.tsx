@@ -1,5 +1,7 @@
 import { default as myTheme } from "@/assets/custom-theme.json";
 import { useSession } from "@/auth/ctx";
+import { logoTransparency } from "@/constants/Assets";
+import { Constant } from "@/constants/Constant";
 import { Styles } from "@/constants/Styles";
 import { Avatar, Text } from "@ui-kitten/components";
 import { router, usePathname } from "expo-router";
@@ -24,14 +26,11 @@ export function AdminNavBar({}) {
       }}
     >
       <TouchableOpacity onPress={() => router.push("/")} activeOpacity={0.5}>
-        <Avatar
-          source={require("@/assets/images/bj_logo_transparency.png")}
-          size="large"
-        />
+        <Avatar source={logoTransparency} size="large" />
       </TouchableOpacity>
 
       <TouchableOpacity
-        onPress={() => router.push("/admin")}
+        onPress={() => router.push(Constant.screens.AdminDashBoard)}
         activeOpacity={0.5}
       >
         <View>
@@ -50,15 +49,15 @@ export function AdminNavBar({}) {
         onDismiss={() => setOpen(false)}
         anchor={<IconButton icon="menu" onPress={() => setOpen(!open)} />}
       >
-        {path != "/admin/dashboard" && (
+        {path != Constant.screens.AdminDashBoard && (
           <Menu.Item
-            onPress={() => router.push("/admin/dashboard")}
+            onPress={() => router.push(Constant.screens.AdminDashBoard)}
             title="Dash Board"
           />
         )}
-        {!session && path != "/admin/login" && (
+        {!session && path != Constant.screens.AdminLogin && (
           <Menu.Item
-            onPress={() => router.push("/admin/login")}
+            onPress={() => router.push(Constant.screens.AdminLogin)}
             title="Login"
           />
         )}

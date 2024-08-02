@@ -43,7 +43,6 @@ export default function AdminLoginScreen() {
         }
       )
       .then((resp: AxiosResponse) => {
-        console.log(resp);
         if (resp.status !== 200) {
           setErrMsg((resp.data && resp.data.message) || "");
           return;
