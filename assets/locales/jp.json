@@ -1,3 +1,13 @@
 {
-  "home-title": "いらっしゃいませ Burmese Jewellery Website"
+  "title": "Burmese Jewellery",
+  "home-title": "いらっしゃいませ Burmese Jewellery",
+  "id": "ID",
+  "mail": "Mail",
+  "role": "Role",
+  "status": "Status",
+  "created-at": "Created At",
+  "updated-at": "Updated At",
+  "loading": "Loading",
+  "ok": "OK",
+  "admin-user-management-admin": "User Management Admin"
 }

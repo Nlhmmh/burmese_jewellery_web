@@ -1,0 +1,15 @@
+{
+  "title": "မြန်မာ့ရတနာ",
+  "home-title": "မြန်မာ့ရတနာမှကြိုဆိုပါသည်",
+  "id": "ID",
+  "mail": "မေးလ်",
+  "role": "တာဝန်",
+  "status": "အခြေအနေ",
+  "created-at": "တည်ဆောက်ချိန်",
+  "updated-at": "ပြင်ဆင်ချိန်",
+  "loading": "ခဏစောင့်ပါ",
+  "ok": "ကောင်းပြီ",
+  "row-per-page": "Row per page",
+  "error": "Error",
+  "admin-user-management-admin": "User Management Admin"
+}

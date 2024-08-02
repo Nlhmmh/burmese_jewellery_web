@@ -1,18 +1,20 @@
 import { AdminNavBar } from "@/app/admin/AdminNavBar";
 import { useSession } from "@/auth/ctx";
-import { Redirect, router, Slot, usePathname } from "expo-router";
+import { MyIcon } from "@/components/Icons";
+import { Constant } from "@/constants/Constant";
 import { Drawer, DrawerItem, Icon } from "@ui-kitten/components";
-import { useEffect, useRef, useState } from "react";
+import { Redirect, router, Slot, usePathname } from "expo-router";
+import { t } from "i18next";
+import { lazy, useEffect, useRef, useState } from "react";
 import {
   Animated,
   Dimensions,
+  Text,
   TouchableOpacity,
   View,
-  Text,
 } from "react-native";
-import { Card, Icon as IconPaper } from "react-native-paper";
+import { Card } from "react-native-paper";
 import { Easing } from "react-native-reanimated";
-import { Constant } from "@/constants/Constant";
 
 export default function AdminLayout() {
   const { session, isLoading } = useSession();
@@ -47,6 +49,44 @@ export default function AdminLayout() {
       </View>
     );
 
+  const menuList = [
+    {
+      label: "admin-user-management-admin",
+      routeName: Constant.screens.AdminUserManagementAdmin,
+      icon: "user",
+    },
+    {
+      label: "admin-user-management-user",
+      routeName: Constant.screens.AdminUserManagementUser,
+      icon: "user",
+    },
+    {
+      label: "admin-category-management",
+      routeName: Constant.screens.AdminCategoryManagement,
+      icon: "list",
+    },
+    {
+      label: "admin-gem-management",
+      routeName: Constant.screens.AdminGemManagement,
+      icon: "aperture",
+    },
+    {
+      label: "admin-material-management",
+      routeName: Constant.screens.AdminMaterialManagement,
+      icon: "archive",
+    },
+    {
+      label: "admin-jewellery-management",
+      routeName: Constant.screens.AdminJewelleryManagement,
+      icon: "target",
+    },
+    {
+      label: "admin-faq-management",
+      routeName: Constant.screens.AdminFAQManagement,
+      icon: "message-circle",
+    },
+  ];
+
   return (
     <View style={{ backgroundColor: "white", flex: 1 }}>
       <AdminNavBar />
@@ -54,79 +94,36 @@ export default function AdminLayout() {
       <View style={{ flexDirection: "row", height: "100%" }}>
         <Animated.View style={{ width: aniWidth }}>
           <Card
-            elevation={2}
             style={{
               flexDirection: "row",
               backgroundColor: "white",
+              borderRadius: 10,
+              paddingVertical: 5,
             }}
           >
-            <Drawer>
-              <DrawerItem
-                title="User Management"
-                accessoryLeft={<Icon name="user" pack="feather" />}
-                accessoryRight={<Icon name="chevron-right" pack="feather" />}
-                onPress={() => {
-                  router.push(Constant.screens.AdminUserManagement);
-                }}
-                activeOpacity={0.1}
+            {menuList.map((v) => (
+              <MyDrawerItem
+                label={v.label}
+                routeName={v.routeName}
+                icon={v.icon}
               />
-              <DrawerItem
-                title="Category Management"
-                accessoryLeft={<Icon name="list" pack="feather" />}
-                accessoryRight={<Icon name="chevron-right" pack="feather" />}
-                onPress={() => {}}
-                activeOpacity={0.1}
+            ))}
+            <TouchableOpacity
+              style={{
+                width: 60,
+                height: 60,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              onPress={() => setShowDrawer(!showDrawer)}
+            >
+              <MyIcon
+                icon={showDrawer ? "chevron-right" : "chevron-left"}
+                size={30}
               />
-              <DrawerItem
-                title="Gem Management"
-                accessoryLeft={<Icon name="aperture" pack="feather" />}
-                accessoryRight={<Icon name="chevron-right" pack="feather" />}
-                onPress={() => {}}
-                activeOpacity={0.1}
-              />
-              <DrawerItem
-                title="Material Management"
-                accessoryLeft={<Icon name="archive" pack="feather" />}
-                accessoryRight={<Icon name="chevron-right" pack="feather" />}
-                onPress={() => {}}
-                activeOpacity={0.1}
-              />
-              <DrawerItem
-                title="Jewellery Management"
-                accessoryLeft={<Icon name="target" pack="feather" />}
-                accessoryRight={<Icon name="chevron-right" pack="feather" />}
-                onPress={() => {}}
-                activeOpacity={0.1}
-              />
-              <DrawerItem
-                title="FAQ Management"
-                accessoryLeft={<Icon name="message-circle" pack="feather" />}
-                accessoryRight={<Icon name="chevron-right" pack="feather" />}
-                onPress={() => {}}
-                activeOpacity={0.1}
-              />
-              <TouchableOpacity
-                style={{
-                  width: 50,
-                  height: 80,
-                  flex: 1,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  paddingVertical: 5,
-                }}
-                onPress={() => setShowDrawer(!showDrawer)}
-              >
-                <IconPaper
-                  source={showDrawer ? "chevron-right" : "chevron-left"}
-                  size={40}
-                />
-              </TouchableOpacity>
-            </Drawer>
+            </TouchableOpacity>
           </Card>
         </Animated.View>
-
-        <View style={{ width: 10 }} />
-
         <Card
           style={{
             flex: 1,
@@ -139,5 +136,25 @@ export default function AdminLayout() {
         </Card>
       </View>
     </View>
+  );
+}
+
+function MyDrawerItem({
+  label,
+  routeName,
+  icon,
+}: {
+  label: string;
+  routeName: string;
+  icon: string;
+}) {
+  return (
+    <DrawerItem
+      title={t(label)}
+      accessoryLeft={<Icon name={icon} pack="feather" />}
+      accessoryRight={<Icon name="chevron-right" pack="feather" />}
+      onPress={() => router.push(routeName)}
+      activeOpacity={0.1}
+    />
   );
 }

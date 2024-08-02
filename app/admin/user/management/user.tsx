@@ -14,14 +14,25 @@ import { Clipboard, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { DataTable } from "react-native-paper";
 
-interface AccountAdmin {
-  account_admin_id: string;
-  account_admin_role: string;
-  account_admin_status: string;
-  created_at: string;
+interface Account {
   key: string;
-  mail: string;
-  updated_at: string;
+  account: {
+    account_id: string;
+    mail: string;
+    account_status: string;
+    login_type: string;
+    created_at: string;
+    updated_at: string;
+  };
+  account_profile: {
+    account_id: string;
+    first_name: string;
+    last_name: string;
+    gender: string;
+    birthday: string;
+    created_at: string;
+    updated_at: string;
+  };
 }
 
 export default function Layout() {
@@ -30,15 +41,13 @@ export default function Layout() {
   const [limit, setLimit] = useState(Constant.limits[0]);
   const [totalItemCount, setTotalItemCount] = useState(0);
   const [sort, setSort] = useState(Constant.sorts.desc);
-  const [items, setItems] = useState<Array<AccountAdmin>>([]);
+  const [items, setItems] = useState<Array<Account>>([]);
   const from = page * limit;
   const to = Math.min((page + 1) * limit, totalItemCount);
   const [showErrModal, setShowErrModal] = useState(false);
   const [errMsg, setErrMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const [searchID, setSearchID] = useState("");
-  const [searchMail, setSearchMail] = useState("");
-  const [searchRole, setSearchRole] = useState(new IndexPath(0));
   const [searchStatus, setSearchStatus] = useState(new IndexPath(0));
 
   const showErrMsg = (errMsg: string) => {
@@ -48,13 +57,10 @@ export default function Layout() {
 
   const fetch = () => {
     setLoading(true);
-    let url = `/api/admin/account_admin?offset=${from}&limit=${limit}&sort=${sort}`;
+    let url = `/api/admin/account?offset=${from}&limit=${limit}&sort=${sort}`;
     if (searchID !== "") url += `&id=${searchID}`;
-    if (searchMail !== "") url += `&mail=${searchMail}`;
-    if (Constant.roles[searchRole.row] !== "")
-      url += `&account_admin_role=${Constant.roles[searchRole.row]}`;
     if (Constant.roles[searchStatus.row] !== "")
-      url += `&account_admin_status=${Constant.statuss[searchStatus.row]}`;
+      url += `&account_status=${Constant.statuss[searchStatus.row]}`;
     apiGet({
       url: url,
       token: session ? session?.token : "",
@@ -94,7 +100,7 @@ export default function Layout() {
         <CenterView
           body={
             <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-              {t("admin-user-management-admin")}
+              {t("admin-user-management-user")}
             </Text>
           }
         />
@@ -104,19 +110,6 @@ export default function Layout() {
             value={searchID}
             setValue={(v) => setSearchID(v)}
             placeholder={t("id")}
-          />
-          <View style={{ width: 10 }} />
-          <TextField
-            value={searchMail}
-            setValue={(v) => setSearchMail(v)}
-            placeholder={t("mail")}
-          />
-          <View style={{ width: 10 }} />
-          <SelectField
-            value={searchRole}
-            setValue={(v) => setSearchRole(v)}
-            items={Constant.roles}
-            label={t("unselected")}
           />
           <View style={{ width: 10 }} />
           <SelectField
@@ -134,8 +127,12 @@ export default function Layout() {
         <DataTable.Header>
           <DataTable.Title>{t("id")}</DataTable.Title>
           <DataTable.Title>{t("mail")}</DataTable.Title>
-          <DataTable.Title>{t("role")}</DataTable.Title>
+          <DataTable.Title>{t("login-type")}</DataTable.Title>
           <DataTable.Title>{t("status")}</DataTable.Title>
+          <DataTable.Title>{t("first-name")}</DataTable.Title>
+          <DataTable.Title>{t("last-name")}</DataTable.Title>
+          <DataTable.Title>{t("gender")}</DataTable.Title>
+          <DataTable.Title>{t("birthday")}</DataTable.Title>
           <DataTable.Title
             sortDirection={
               sort === Constant.sorts.desc ? "descending" : "ascending"
@@ -160,25 +157,31 @@ export default function Layout() {
           items.map((v) => (
             <DataTable.Row key={v.key}>
               <DataTable.Cell>
-                <TouchableOpacity
-                  onPress={() => Clipboard.setString(v.account_admin_id)}
-                  activeOpacity={0.5}
-                >
-                  {v.account_admin_id}
-                </TouchableOpacity>
+                <View style={{ flex: 1 }}>
+                  <TouchableOpacity
+                    onPress={() => Clipboard.setString(v.account.account_id)}
+                    activeOpacity={0.5}
+                  >
+                    <Text style={{ fontSize: 12 }}>{v.account.account_id}</Text>
+                  </TouchableOpacity>
+                </View>
               </DataTable.Cell>
               <DataTable.Cell>
                 <TouchableOpacity
-                  onPress={() => Clipboard.setString(v.mail)}
+                  onPress={() => Clipboard.setString(v.account.mail)}
                   activeOpacity={0.5}
                 >
-                  {v.mail}
+                  {v.account.mail}
                 </TouchableOpacity>
               </DataTable.Cell>
-              <DataTable.Cell>{v.account_admin_role}</DataTable.Cell>
-              <DataTable.Cell>{v.account_admin_status}</DataTable.Cell>
-              <DataTable.Cell>{v.created_at}</DataTable.Cell>
-              <DataTable.Cell>{v.updated_at}</DataTable.Cell>
+              <DataTable.Cell>{v.account.login_type}</DataTable.Cell>
+              <DataTable.Cell>{v.account.account_status}</DataTable.Cell>
+              <DataTable.Cell>{v.account_profile.first_name}</DataTable.Cell>
+              <DataTable.Cell>{v.account_profile.last_name}</DataTable.Cell>
+              <DataTable.Cell>{v.account_profile.gender}</DataTable.Cell>
+              <DataTable.Cell>{v.account_profile.birthday}</DataTable.Cell>
+              <DataTable.Cell>{v.account.created_at}</DataTable.Cell>
+              <DataTable.Cell>{v.account.updated_at}</DataTable.Cell>
             </DataTable.Row>
           ))}
 

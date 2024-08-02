@@ -1,5 +1,8 @@
-import { Icon, Input } from "@ui-kitten/components";
-import { TouchableWithoutFeedback } from "@ui-kitten/components/devsupport";
+import { Icon, Input, Select, SelectItem } from "@ui-kitten/components";
+import {
+  IndexPath,
+  TouchableWithoutFeedback,
+} from "@ui-kitten/components/devsupport";
 import { Text, View } from "react-native";
 
 function Label({ label }: { label: string }) {
@@ -15,13 +18,16 @@ export function TextField({
 }: {
   value: string;
   setValue: (v: string) => void;
-  label: string;
+  label?: string;
   placeholder?: string;
-  onBlur: (e: any) => void;
+  onBlur?: (e: any) => void;
 }) {
   return (
     <Input
-      label={() => <Label label={label} />}
+      label={() => {
+        if (label) return <Label label={label} />;
+        return <></>;
+      }}
       placeholder={placeholder || ""}
       size="large"
       style={{ borderRadius: 10 }}
@@ -64,5 +70,33 @@ export function TextFieldSecure({
         </TouchableWithoutFeedback>
       )}
     />
+  );
+}
+
+export function SelectField({
+  value,
+  setValue,
+  items,
+  width = 200,
+  label,
+}: {
+  value: any;
+  setValue: (v: any) => void;
+  items: Array<string>;
+  width?: number;
+  label: string;
+}) {
+  return (
+    <Select
+      selectedIndex={value}
+      onSelect={(v) => setValue(v)}
+      value={items[value.row] === "" ? label : items[value.row]}
+      size="large"
+      style={{ width: width }}
+    >
+      {items.map((v) => (
+        <SelectItem title={v} />
+      ))}
+    </Select>
   );
 }

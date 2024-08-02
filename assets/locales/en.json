@@ -1,3 +1,24 @@
 {
-  "home-title": "Welcome to Burmese Jewellery Website"
+  "title": "Burmese Jewellery",
+  "home-title": "Welcome to Burmese Jewellery",
+  "id": "ID",
+  "id-placeholder": "Enter your search id",
+  "mail": "Mail",
+  "mail-placeholder": "Enter your mail",
+  "role": "Role",
+  "status": "Status",
+  "created-at": "Created At",
+  "updated-at": "Updated At",
+  "loading": "Loading",
+  "ok": "OK",
+  "row-per-page": "Row per page",
+  "error": "Error",
+  "unselected": "Unselected",
+  "admin-user-management-admin": "User Management Admin",
+  "admin-user-management-user": "User Management User",
+  "admin-category-management": "Category Management",
+  "admin-gem-management": "Gem Management",
+  "admin-material-management": "Material Management",
+  "admin-jewellery-management": "Jewellery Management",
+  "admin-faq-management": "FAQ Management"
 }

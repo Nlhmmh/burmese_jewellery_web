@@ -1,7 +1,8 @@
 import { default as myTheme } from "@/assets/custom-theme.json";
 import { Button } from "@ui-kitten/components";
 import { Text, TouchableOpacity, View } from "react-native";
-import { Icon } from "react-native-paper";
+import { MyIcon } from "./Icons";
+import { CenterView } from "./Misc";
 
 export function PrimaryBtn({
   title,
@@ -62,17 +63,17 @@ export function CardBtn({
 export function IconBtn({
   icon,
   size = 20,
+  color = "black",
   onPress,
 }: {
   icon: string;
   size?: number;
+  color?: string;
   onPress: () => void;
 }) {
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.5}>
-      <View style={{ paddingHorizontal: 5 }}>
-        <Icon source={icon} size={size} />
-      </View>
+      <CenterView body={<MyIcon icon={icon} size={size} color={color} />} />
     </TouchableOpacity>
   );
 }
