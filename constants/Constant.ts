@@ -18,7 +18,5 @@ export const Constant = {
     desc: "desc",
   },
   limits: [1, 2, 5, 10],
-  roles: ["", "staff", "admin"],
-  statuss: ["", "active", "locked"],
-  dateFormat: "YYYY-MM-DD HH:mm:ss Z ( ddd )",
+  dateFormat: "YYYY-MM-DD HH:mm:ss Z",
 };

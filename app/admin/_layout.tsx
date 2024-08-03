@@ -1,11 +1,14 @@
 import { AdminNavBar } from "@/app/admin/AdminNavBar";
 import { useSession } from "@/auth/ctx";
+import { parseEnums } from "@/auth/enums";
 import { MyIcon } from "@/components/Icons";
 import { Constant } from "@/constants/Constant";
-import { Drawer, DrawerItem, Icon } from "@ui-kitten/components";
+import { apiGet } from "@/utils/api";
+import { DrawerItem, Icon } from "@ui-kitten/components";
+import { AxiosError, AxiosResponse } from "axios";
 import { Redirect, router, Slot, usePathname } from "expo-router";
 import { t } from "i18next";
-import { lazy, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Animated,
   Dimensions,
@@ -17,8 +20,25 @@ import { Card } from "react-native-paper";
 import { Easing } from "react-native-reanimated";
 
 export default function AdminLayout() {
-  const { session, isLoading } = useSession();
+  const { session, isLoading, setEnums } = useSession();
   const path = usePathname();
+
+  const [isEnumLoaded, setIsEnumLoaded] = useState(false);
+  useEffect(() => {
+    if (!isEnumLoaded)
+      apiGet({
+        url: "/api/enums",
+        token: "",
+        then: (resp: AxiosResponse) => {
+          if (resp.status !== 200) {
+            return;
+          }
+          setEnums(JSON.stringify(parseEnums(resp.data)));
+        },
+        onCatch: (e: AxiosError) => {},
+        onFinally: () => setIsEnumLoaded(true),
+      });
+  }, []);
 
   const { width } = Dimensions.get("window");
   const aniWidth = useRef(new Animated.Value((width * 10) / 100)).current;
@@ -103,6 +123,7 @@ export default function AdminLayout() {
           >
             {menuList.map((v) => (
               <MyDrawerItem
+                key={v.label}
                 label={v.label}
                 routeName={v.routeName}
                 icon={v.icon}

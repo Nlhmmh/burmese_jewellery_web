@@ -1,6 +1,7 @@
 {
   "title": "Burmese Jewellery",
   "home-title": "Welcome to Burmese Jewellery",
+
   "id": "ID",
   "id-placeholder": "Enter your search id",
   "mail": "Mail",
@@ -11,9 +12,16 @@
   "updated-at": "Updated At",
   "loading": "Loading",
   "ok": "OK",
-  "row-per-page": "Row per page",
   "error": "Error",
+  "row-per-page": "Row per page",
   "unselected": "Unselected",
+  "profile": "Profile",
+  "login-type": "Login Type",
+  "first-name": "First Name",
+  "last-name": "Last Name",
+  "gender": "Gender",
+  "birthday": "Birthday",
+
   "admin-user-management-admin": "User Management Admin",
   "admin-user-management-user": "User Management User",
   "admin-category-management": "Category Management",

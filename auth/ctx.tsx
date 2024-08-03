@@ -9,11 +9,15 @@ const AuthContext = createContext<{
     isAdmin: boolean;
   };
   isLoading: boolean;
+  setEnums: (v: string) => void;
+  getEnums: () => any;
 }>({
   signIn: (v: string, isAdmin: boolean) => null,
   signOut: () => null,
   session: undefined,
   isLoading: false,
+  setEnums: (v: string) => null,
+  getEnums: () => null,
 });
 
 export function useSession() {
@@ -27,8 +31,10 @@ export function useSession() {
 }
 
 export function SessionProvider({ children }: PropsWithChildren) {
-  const [[isLoading, token], setToken] = useStorageState("token");
-  const [[_, isAdmin], setIsAdmin] = useStorageState("isAdmin");
+  const [[isLoadingToken, token], setToken] = useStorageState("token");
+  const [[isLoadingIsAdmin, isAdmin], setIsAdmin] = useStorageState("isAdmin");
+  const [[isLoadingEnums, enums], setEnums] = useStorageState("enums");
+  const isLoading = isLoadingToken && isLoadingIsAdmin && isLoadingEnums;
   return (
     <AuthContext.Provider
       value={{
@@ -44,6 +50,8 @@ export function SessionProvider({ children }: PropsWithChildren) {
           token: token,
           isAdmin: isAdmin,
         },
+        setEnums: (v: string) => setEnums(v),
+        getEnums: () => JSON.parse(enums),
         isLoading,
       }}
     >

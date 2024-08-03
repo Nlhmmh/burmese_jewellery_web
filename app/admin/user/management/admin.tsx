@@ -11,7 +11,6 @@ import { t } from "i18next";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { Clipboard, Text, View } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { DataTable } from "react-native-paper";
 
 interface AccountAdmin {
@@ -25,7 +24,8 @@ interface AccountAdmin {
 }
 
 export default function Layout() {
-  const { session } = useSession();
+  const { getEnums, session } = useSession();
+  const [enums] = useState(getEnums());
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(Constant.limits[0]);
   const [totalItemCount, setTotalItemCount] = useState(0);
@@ -51,10 +51,16 @@ export default function Layout() {
     let url = `/api/admin/account_admin?offset=${from}&limit=${limit}&sort=${sort}`;
     if (searchID !== "") url += `&id=${searchID}`;
     if (searchMail !== "") url += `&mail=${searchMail}`;
-    if (Constant.roles[searchRole.row] !== "")
-      url += `&account_admin_role=${Constant.roles[searchRole.row]}`;
-    if (Constant.roles[searchStatus.row] !== "")
-      url += `&account_admin_status=${Constant.statuss[searchStatus.row]}`;
+    if (enums.account_admin_role.selects[searchRole.row] !== "") {
+      url += `&account_admin_role=${
+        enums.account_admin_role.selects[searchRole.row]
+      }`;
+    }
+    if (enums.account_admin_status.selects[searchStatus.row] !== "") {
+      url += `&account_admin_status=${
+        enums.account_admin_status.selects[searchStatus.row]
+      }`;
+    }
     apiGet({
       url: url,
       token: session ? session?.token : "",
@@ -115,14 +121,14 @@ export default function Layout() {
           <SelectField
             value={searchRole}
             setValue={(v) => setSearchRole(v)}
-            items={Constant.roles}
+            items={enums.account_admin_role.selects || []}
             label={t("unselected")}
           />
           <View style={{ width: 10 }} />
           <SelectField
             value={searchStatus}
             setValue={(v) => setSearchStatus(v)}
-            items={Constant.statuss}
+            items={enums.account_admin_status.selects || []}
             label={t("unselected")}
           />
           <View style={{ width: 10 }} />
@@ -159,26 +165,26 @@ export default function Layout() {
         {!loading &&
           items.map((v) => (
             <DataTable.Row key={v.key}>
-              <DataTable.Cell>
-                <TouchableOpacity
-                  onPress={() => Clipboard.setString(v.account_admin_id)}
-                  activeOpacity={0.5}
-                >
-                  {v.account_admin_id}
-                </TouchableOpacity>
+              <DataTable.Cell
+                onPress={() => Clipboard.setString(v.account_admin_id)}
+              >
+                <Text>{v.account_admin_id}</Text>
+              </DataTable.Cell>
+              <DataTable.Cell onPress={() => Clipboard.setString(v.mail)}>
+                <Text>{v.mail}</Text>
               </DataTable.Cell>
               <DataTable.Cell>
-                <TouchableOpacity
-                  onPress={() => Clipboard.setString(v.mail)}
-                  activeOpacity={0.5}
-                >
-                  {v.mail}
-                </TouchableOpacity>
+                <Text>{v.account_admin_role}</Text>
               </DataTable.Cell>
-              <DataTable.Cell>{v.account_admin_role}</DataTable.Cell>
-              <DataTable.Cell>{v.account_admin_status}</DataTable.Cell>
-              <DataTable.Cell>{v.created_at}</DataTable.Cell>
-              <DataTable.Cell>{v.updated_at}</DataTable.Cell>
+              <DataTable.Cell>
+                <Text>{v.account_admin_status}</Text>
+              </DataTable.Cell>
+              <DataTable.Cell>
+                <Text>{v.created_at}</Text>
+              </DataTable.Cell>
+              <DataTable.Cell>
+                <Text>{v.updated_at}</Text>
+              </DataTable.Cell>
             </DataTable.Row>
           ))}
 

@@ -1,9 +1,6 @@
 import { Icon, Input, Select, SelectItem } from "@ui-kitten/components";
-import {
-  IndexPath,
-  TouchableWithoutFeedback,
-} from "@ui-kitten/components/devsupport";
-import { Text, View } from "react-native";
+import { TouchableWithoutFeedback } from "@ui-kitten/components/devsupport";
+import { Text } from "react-native";
 
 function Label({ label }: { label: string }) {
   return <Text style={{ fontSize: 14, paddingBottom: 5 }}>{label}</Text>;
@@ -95,7 +92,7 @@ export function SelectField({
       style={{ width: width }}
     >
       {items.map((v) => (
-        <SelectItem title={v} />
+        <SelectItem key={v} title={v} />
       ))}
     </Select>
   );

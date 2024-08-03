@@ -3,8 +3,8 @@ import { SessionProvider } from "@/auth/ctx";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import "@/i18n";
 import { FeatherIconsPack } from "@/icons/feather-icons";
-import { MaterialCommunityIconsPack } from "@/icons/material-community-icons";
 import { FontAwesomeIconsPack } from "@/icons/font-awesome-icons";
+import { MaterialCommunityIconsPack } from "@/icons/material-community-icons";
 import * as eva from "@eva-design/eva";
 import {
   DarkTheme,

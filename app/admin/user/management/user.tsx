@@ -11,7 +11,6 @@ import { t } from "i18next";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { Clipboard, Text, View } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { DataTable } from "react-native-paper";
 
 interface Account {
@@ -36,7 +35,8 @@ interface Account {
 }
 
 export default function Layout() {
-  const { session } = useSession();
+  const { getEnums, session } = useSession();
+  const [enums] = useState(getEnums());
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(Constant.limits[0]);
   const [totalItemCount, setTotalItemCount] = useState(0);
@@ -48,6 +48,8 @@ export default function Layout() {
   const [errMsg, setErrMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const [searchID, setSearchID] = useState("");
+  const [searchFirstName, setSearchFirstname] = useState("");
+  const [searchLastName, setSearchLastName] = useState("");
   const [searchStatus, setSearchStatus] = useState(new IndexPath(0));
 
   const showErrMsg = (errMsg: string) => {
@@ -59,8 +61,13 @@ export default function Layout() {
     setLoading(true);
     let url = `/api/admin/account?offset=${from}&limit=${limit}&sort=${sort}`;
     if (searchID !== "") url += `&id=${searchID}`;
-    if (Constant.roles[searchStatus.row] !== "")
-      url += `&account_status=${Constant.statuss[searchStatus.row]}`;
+    if (searchFirstName !== "") url += `&first_name=${searchFirstName}`;
+    if (searchLastName !== "") url += `&last_name=${searchLastName}`;
+    if (enums.account_status.selects[searchStatus.row] !== "") {
+      url += `&account_status=${
+        enums.account_status.selects[searchStatus.row]
+      }`;
+    }
     apiGet({
       url: url,
       token: session ? session?.token : "",
@@ -71,9 +78,13 @@ export default function Layout() {
         }
         if (!resp.data.data) return;
         for (const v of resp.data.data) {
-          v.key = v.account_admin_id;
-          v.created_at = moment(v.created_at).format(Constant.dateFormat);
-          v.updated_at = moment(v.updated_at).format(Constant.dateFormat);
+          v.key = v.account.account_id;
+          v.account.created_at = moment(v.created_at).format(
+            Constant.dateFormat
+          );
+          v.account.updated_at = moment(v.updated_at).format(
+            Constant.dateFormat
+          );
         }
         setItems(resp.data.data);
         setTotalItemCount(resp.data.count);
@@ -112,10 +123,22 @@ export default function Layout() {
             placeholder={t("id")}
           />
           <View style={{ width: 10 }} />
+          <TextField
+            value={searchFirstName}
+            setValue={(v) => setSearchFirstname(v)}
+            placeholder={t("first-name")}
+          />
+          <View style={{ width: 10 }} />
+          <TextField
+            value={searchLastName}
+            setValue={(v) => setSearchLastName(v)}
+            placeholder={t("last-name")}
+          />
+          <View style={{ width: 10 }} />
           <SelectField
             value={searchStatus}
             setValue={(v) => setSearchStatus(v)}
-            items={Constant.statuss}
+            items={enums.account_status.selects || []}
             label={t("unselected")}
           />
           <View style={{ width: 10 }} />
@@ -129,10 +152,7 @@ export default function Layout() {
           <DataTable.Title>{t("mail")}</DataTable.Title>
           <DataTable.Title>{t("login-type")}</DataTable.Title>
           <DataTable.Title>{t("status")}</DataTable.Title>
-          <DataTable.Title>{t("first-name")}</DataTable.Title>
-          <DataTable.Title>{t("last-name")}</DataTable.Title>
-          <DataTable.Title>{t("gender")}</DataTable.Title>
-          <DataTable.Title>{t("birthday")}</DataTable.Title>
+          <DataTable.Title style={{ flex: 1 }}>{t("profile")}</DataTable.Title>
           <DataTable.Title
             sortDirection={
               sort === Constant.sorts.desc ? "descending" : "ascending"
@@ -156,32 +176,48 @@ export default function Layout() {
         {!loading &&
           items.map((v) => (
             <DataTable.Row key={v.key}>
+              <DataTable.Cell
+                onPress={() => Clipboard.setString(v.account.account_id)}
+              >
+                <Text>{v.account.account_id}</Text>
+              </DataTable.Cell>
+              <DataTable.Cell
+                onPress={() => Clipboard.setString(v.account.mail)}
+              >
+                <Text>{v.account.mail}</Text>
+              </DataTable.Cell>
               <DataTable.Cell>
+                <Text>{v.account.login_type}</Text>
+              </DataTable.Cell>
+              <DataTable.Cell>
+                <Text>{v.account.account_status}</Text>
+              </DataTable.Cell>
+              <DataTable.Cell style={{ flex: 1 }}>
                 <View style={{ flex: 1 }}>
-                  <TouchableOpacity
-                    onPress={() => Clipboard.setString(v.account.account_id)}
-                    activeOpacity={0.5}
-                  >
-                    <Text style={{ fontSize: 12 }}>{v.account.account_id}</Text>
-                  </TouchableOpacity>
+                  <TextRow
+                    field={t("first-name")}
+                    value={v.account_profile.first_name}
+                  />
+                  <TextRow
+                    field={t("last-name")}
+                    value={v.account_profile.last_name}
+                  />
+                  <TextRow
+                    field={t("gender")}
+                    value={v.account_profile.gender}
+                  />
+                  <TextRow
+                    field={t("birthday")}
+                    value={v.account_profile.birthday}
+                  />
                 </View>
               </DataTable.Cell>
               <DataTable.Cell>
-                <TouchableOpacity
-                  onPress={() => Clipboard.setString(v.account.mail)}
-                  activeOpacity={0.5}
-                >
-                  {v.account.mail}
-                </TouchableOpacity>
+                <Text>{v.account.created_at}</Text>
               </DataTable.Cell>
-              <DataTable.Cell>{v.account.login_type}</DataTable.Cell>
-              <DataTable.Cell>{v.account.account_status}</DataTable.Cell>
-              <DataTable.Cell>{v.account_profile.first_name}</DataTable.Cell>
-              <DataTable.Cell>{v.account_profile.last_name}</DataTable.Cell>
-              <DataTable.Cell>{v.account_profile.gender}</DataTable.Cell>
-              <DataTable.Cell>{v.account_profile.birthday}</DataTable.Cell>
-              <DataTable.Cell>{v.account.created_at}</DataTable.Cell>
-              <DataTable.Cell>{v.account.updated_at}</DataTable.Cell>
+              <DataTable.Cell>
+                <Text>{v.account.updated_at}</Text>
+              </DataTable.Cell>
             </DataTable.Row>
           ))}
 
@@ -206,3 +242,12 @@ export default function Layout() {
     </>
   );
 }
+
+const TextRow = ({ field, value }: { field: string; value: string }) => {
+  return (
+    <View style={{ flexDirection: "row" }}>
+      <Text style={{ flex: 1 }}>{field}</Text>
+      <Text style={{ flex: 1 }}>{value}</Text>
+    </View>
+  );
+};
