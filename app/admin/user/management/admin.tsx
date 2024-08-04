@@ -12,8 +12,11 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { Clipboard, Text, View } from "react-native";
 import { DataTable } from "react-native-paper";
+import { AddAdminUserModal } from "./admin/AddAdminUserModal";
+import { EditAdminUserModal } from "./admin/EditAdminUserModal";
+import { DeleteAdminUserModal } from "./admin/DeleteAdminUserModal";
 
-interface AccountAdmin {
+export interface AccountAdmin {
   account_admin_id: string;
   account_admin_role: string;
   account_admin_status: string;
@@ -40,6 +43,18 @@ export default function Layout() {
   const [searchMail, setSearchMail] = useState("");
   const [searchRole, setSearchRole] = useState(new IndexPath(0));
   const [searchStatus, setSearchStatus] = useState(new IndexPath(0));
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editDelModel, setEditDelModel] = useState<AccountAdmin>({
+    account_admin_id: "",
+    account_admin_role: "",
+    account_admin_status: "",
+    created_at: "",
+    key: "",
+    mail: "",
+    updated_at: "",
+  });
+  const [delModal, setDelModal] = useState(false);
 
   const showErrMsg = (errMsg: string) => {
     setShowErrModal(true);
@@ -88,6 +103,8 @@ export default function Layout() {
     setPage(0);
   }, [limit]);
 
+  useEffect(() => fetch(), [sort]);
+
   return (
     <>
       <View
@@ -122,14 +139,20 @@ export default function Layout() {
             value={searchRole}
             setValue={(v) => setSearchRole(v)}
             items={enums.account_admin_role.selects || []}
-            label={t("unselected")}
+            placeholder={t("status-placeholder")}
           />
           <View style={{ width: 10 }} />
           <SelectField
             value={searchStatus}
             setValue={(v) => setSearchStatus(v)}
             items={enums.account_admin_status.selects || []}
-            label={t("unselected")}
+            placeholder={t("status-placeholder")}
+          />
+          <View style={{ width: 10 }} />
+          <IconBtn
+            icon="plus-circle"
+            size={30}
+            onPress={() => setShowAddModal(true)}
           />
           <View style={{ width: 10 }} />
           <IconBtn icon="search" onPress={() => fetch()} size={30} />
@@ -154,6 +177,9 @@ export default function Layout() {
             {t("created-at")}
           </DataTable.Title>
           <DataTable.Title>{t("updated-at")}</DataTable.Title>
+          <DataTable.Title style={{ flex: 0.5 }}>
+            {t("actions")}
+          </DataTable.Title>
         </DataTable.Header>
 
         {loading && (
@@ -185,6 +211,25 @@ export default function Layout() {
               <DataTable.Cell>
                 <Text>{v.updated_at}</Text>
               </DataTable.Cell>
+              <DataTable.Cell style={{ flex: 0.5 }}>
+                <IconBtn
+                  icon="edit"
+                  size={30}
+                  onPress={() => {
+                    setEditDelModel(v);
+                    setShowEditModal(true);
+                  }}
+                />
+                <View style={{ width: 10 }} />
+                <IconBtn
+                  icon="trash"
+                  size={30}
+                  onPress={() => {
+                    setEditDelModel(v);
+                    setDelModal(true);
+                  }}
+                />
+              </DataTable.Cell>
             </DataTable.Row>
           ))}
 
@@ -205,6 +250,26 @@ export default function Layout() {
         show={showErrModal}
         setShow={setShowErrModal}
         errMsg={errMsg}
+      />
+
+      <AddAdminUserModal
+        show={showAddModal}
+        setShow={setShowAddModal}
+        onSuccess={() => fetch()}
+      />
+
+      <EditAdminUserModal
+        dataModel={editDelModel}
+        show={showEditModal}
+        setShow={setShowEditModal}
+        onSuccess={() => fetch()}
+      />
+
+      <DeleteAdminUserModal
+        dataModel={editDelModel}
+        show={delModal}
+        setShow={setDelModal}
+        onSuccess={() => fetch()}
       />
     </>
   );

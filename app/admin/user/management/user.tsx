@@ -1,6 +1,6 @@
 import { useSession } from "@/auth/ctx";
 import { IconBtn } from "@/components/Button";
-import { CenterView } from "@/components/Misc";
+import { CenterView, TextRow } from "@/components/Misc";
 import { ErrorModal } from "@/components/Modals";
 import { SelectField, TextField } from "@/components/TextField";
 import { Constant } from "@/constants/Constant";
@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { Clipboard, Text, View } from "react-native";
 import { DataTable } from "react-native-paper";
 
-interface Account {
+export interface Account {
   key: string;
   account: {
     account_id: string;
@@ -242,12 +242,3 @@ export default function Layout() {
     </>
   );
 }
-
-const TextRow = ({ field, value }: { field: string; value: string }) => {
-  return (
-    <View style={{ flexDirection: "row" }}>
-      <Text style={{ flex: 1 }}>{field}</Text>
-      <Text style={{ flex: 1 }}>{value}</Text>
-    </View>
-  );
-};

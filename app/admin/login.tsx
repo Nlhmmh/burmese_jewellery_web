@@ -1,17 +1,17 @@
 import { useSession } from "@/auth/ctx";
 import { PrimaryBtn } from "@/components/Button";
-import { TextField, TextFieldSecure } from "@/components/TextField";
-import { Constant } from "@/constants/Constant";
+import { MailTextField, PasswordTextField } from "@/components/Forms";
+import { apiPost } from "@/utils/api";
 import { Card } from "@ui-kitten/components";
-import axios, { AxiosError, AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import { router } from "expo-router";
+import { t } from "i18next";
 import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { View } from "react-native";
 import { HelperText } from "react-native-paper";
 
 export default function AdminLoginScreen() {
-  const [showPW, setShowPW] = useState(true);
   const { signIn } = useSession();
   const {
     control,
@@ -19,42 +19,37 @@ export default function AdminLoginScreen() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      // mail: "admin8@gmail.com",
+      // mail: "admin@gmail.com",
       // pw: "admin",
       mail: "",
       pw: "",
     },
   });
+  const [showPW, setShowPW] = useState(true);
   const [errMsg, setErrMsg] = useState("");
 
   const onClickLogin = async (formData: { mail: string; pw: string }) => {
     setErrMsg("");
-    axios
-      .post(
-        Constant.apiURL + "/api/admin/login",
-        {
-          mail: formData.mail,
-          password: formData.pw,
-        },
-        {
-          validateStatus: (status) => {
-            return status < 500;
-          },
-        }
-      )
-      .then((resp: AxiosResponse) => {
+    apiPost({
+      url: "/api/admin/login",
+      token: "",
+      data: {
+        mail: formData.mail,
+        password: formData.pw,
+      },
+      then: (resp: AxiosResponse) => {
         if (resp.status !== 200) {
           setErrMsg((resp.data && resp.data.message) || "");
           return;
         }
         signIn(resp.data, true);
         router.push("/admin/dashboard");
-      })
-      .catch((e: AxiosError) => {
-        console.debug(e.response);
-        console.debug(e);
-      })
-      .finally(() => {});
+      },
+      onCatch: (e: AxiosError) => {
+        setErrMsg(e.message);
+      },
+      onFinally: () => {},
+    });
   };
 
   return (
@@ -72,71 +67,24 @@ export default function AdminLoginScreen() {
           borderRadius: 20,
         }}
       >
-        {/* ------------- mail */}
-        <Controller
-          name="mail"
-          control={control}
-          rules={{
-            required: true,
-            pattern:
-              /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
-            maxLength: 255,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextField
-              value={value}
-              setValue={(v) => onChange(v)}
-              label="Mail Address"
-              placeholder="Enter your mail"
-              onBlur={onBlur}
-            />
-          )}
-        />
-        {errors.mail?.type === "required" && (
-          <HelperText type="error">{"Email is required"}</HelperText>
-        )}
-        {errors.mail?.type === "pattern" && (
-          <HelperText type="error">{"Email is invalid"}</HelperText>
-        )}
+        {/* ------------- Mail */}
+        <MailTextField control={control} errors={errors} />
         <View style={{ height: 20 }} />
 
         {/* ------------- Password */}
-        <Controller
-          name="pw"
+        <PasswordTextField
           control={control}
-          rules={{
-            required: true,
-            minLength: 5,
-            maxLength: 20,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextFieldSecure
-              value={value}
-              setValue={(v) => onChange(v)}
-              show={showPW}
-              setShow={(v) => setShowPW(v)}
-              label="Password"
-              placeholder="Enter your password"
-              onBlur={onBlur}
-            />
-          )}
+          errors={errors}
+          showPW={showPW}
+          setShowPW={setShowPW}
         />
-        {errors.pw?.type === "required" && (
-          <HelperText type="error">{"Password is required"}</HelperText>
-        )}
-        {(errors.pw?.type === "minLength" ||
-          errors.pw?.type === "maxLength") && (
-          <HelperText type="error">
-            {"Password must be between 5 and 20 characters"}
-          </HelperText>
-        )}
         <View style={{ height: 10 }} />
 
         {errMsg !== "" && <HelperText type="error">{errMsg}</HelperText>}
         <View style={{ height: 10 }} />
 
         {/* ------------- Login Btn */}
-        <PrimaryBtn title="Login" onPress={handleSubmit(onClickLogin)} />
+        <PrimaryBtn title={t("login")} onPress={handleSubmit(onClickLogin)} />
       </Card>
     </View>
   );

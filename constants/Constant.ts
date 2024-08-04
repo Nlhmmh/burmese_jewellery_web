@@ -17,6 +17,8 @@ export const Constant = {
     asc: "asc",
     desc: "desc",
   },
-  limits: [1, 2, 5, 10],
+  limits: [5, 10],
   dateFormat: "YYYY-MM-DD HH:mm:ss Z",
+  mailCheckPattern:
+    /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
 };

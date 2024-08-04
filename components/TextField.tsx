@@ -1,9 +1,20 @@
 import { Icon, Input, Select, SelectItem } from "@ui-kitten/components";
 import { TouchableWithoutFeedback } from "@ui-kitten/components/devsupport";
-import { Text } from "react-native";
+import { DimensionValue, Text, View } from "react-native";
 
-function Label({ label }: { label: string }) {
-  return <Text style={{ fontSize: 14, paddingBottom: 5 }}>{label}</Text>;
+function Label({
+  label,
+  extraBody,
+}: {
+  label: string;
+  extraBody?: React.ReactNode;
+}) {
+  return (
+    <View style={{ flexDirection: "row" }}>
+      <Text style={{ fontSize: 14, paddingBottom: 5 }}>{label}</Text>
+      {extraBody}
+    </View>
+  );
 }
 
 export function TextField({
@@ -12,12 +23,16 @@ export function TextField({
   label,
   placeholder,
   onBlur,
+  width,
+  disabled = false,
 }: {
   value: string;
   setValue: (v: string) => void;
   label?: string;
   placeholder?: string;
   onBlur?: (e: any) => void;
+  width?: DimensionValue | undefined;
+  disabled?: boolean;
 }) {
   return (
     <Input
@@ -27,10 +42,11 @@ export function TextField({
       }}
       placeholder={placeholder || ""}
       size="large"
-      style={{ borderRadius: 10 }}
+      style={{ borderRadius: 10, flex: 1, width: width }}
       value={value}
       onChangeText={(v) => setValue(v)}
       onBlur={onBlur}
+      disabled={disabled}
     />
   );
 }
@@ -43,6 +59,9 @@ export function TextFieldSecure({
   label,
   placeholder,
   onBlur,
+  width,
+  disabled = false,
+  extraBody,
 }: {
   value: string;
   setValue: (v: string) => void;
@@ -51,13 +70,16 @@ export function TextFieldSecure({
   label: string;
   placeholder?: string;
   onBlur: (e: any) => void;
+  width?: DimensionValue | undefined;
+  disabled?: boolean;
+  extraBody?: React.ReactNode;
 }) {
   return (
     <Input
-      label={() => <Label label={label} />}
+      label={() => <Label label={label} extraBody={extraBody} />}
       placeholder={placeholder || ""}
       size="large"
-      style={{ borderRadius: 10 }}
+      style={{ borderRadius: 10, flex: 1, width: width }}
       value={value}
       onChangeText={(v) => setValue(v)}
       secureTextEntry={show}
@@ -66,6 +88,8 @@ export function TextFieldSecure({
           <Icon pack="feather" name={show ? "eye-off" : "eye"} />
         </TouchableWithoutFeedback>
       )}
+      onBlur={onBlur}
+      disabled={disabled}
     />
   );
 }
@@ -74,22 +98,32 @@ export function SelectField({
   value,
   setValue,
   items,
-  width = 200,
+  width,
   label,
+  placeholder,
+  onBlur,
 }: {
   value: any;
   setValue: (v: any) => void;
   items: Array<string>;
-  width?: number;
-  label: string;
+  width?: DimensionValue | undefined;
+  label?: string;
+  placeholder?: string;
+  onBlur?: (e: any) => void;
 }) {
   return (
     <Select
+      label={() => {
+        if (label) return <Label label={label} />;
+        return <></>;
+      }}
       selectedIndex={value}
       onSelect={(v) => setValue(v)}
-      value={items[value.row] === "" ? label : items[value.row]}
+      value={items[value.row] === "" ? placeholder : items[value.row]}
       size="large"
-      style={{ width: width }}
+      style={{ flex: 1, width: width }}
+      onBlur={onBlur}
+      placeholder={placeholder}
     >
       {items.map((v) => (
         <SelectItem key={v} title={v} />

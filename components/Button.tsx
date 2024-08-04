@@ -1,23 +1,28 @@
 import { default as myTheme } from "@/assets/custom-theme.json";
 import { Button } from "@ui-kitten/components";
-import { Text, TouchableOpacity, View } from "react-native";
+import { DimensionValue, Text, TouchableOpacity, View } from "react-native";
 import { MyIcon } from "./Icons";
 import { CenterView } from "./Misc";
 
 export function PrimaryBtn({
   title,
-  width = 100,
+  width = "100%",
+  height = 50,
   onPress,
+  appearance = "filled",
 }: {
   title: string;
-  width?: number;
+  width?: DimensionValue | undefined;
+  height?: DimensionValue | undefined;
   onPress: () => void;
+  appearance?: string;
 }) {
   return (
     <Button
-      style={{ borderRadius: 10, width: width }}
+      style={{ borderRadius: 10, width: width, height: height }}
       size="large"
       onPress={onPress}
+      appearance={appearance}
     >
       {title}
     </Button>
