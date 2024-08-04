@@ -30,6 +30,16 @@
   "birthday": "Birthday",
   "created-at": "Created At",
   "updated-at": "Updated At",
+  "actions": "Actions",
+  "name": "Name",
+  "description": "Description",
+  "price": "Price",
+  "quantity": "Quantity",
+  "image": "Image",
+  "is-published": "Is Published",
+  "material": "Material",
+  "gem": "Gem",
+  "category": "Category",
 
   "loading": "Loading",
   "ok": "OK",
@@ -43,11 +53,11 @@
   "cancel": "Cancel",
   "login": "Login",
 
-  "admin-user-management-admin": "User Management Admin",
-  "admin-user-management-user": "User Management User",
-  "admin-category-management": "Category Management",
-  "admin-gem-management": "Gem Management",
-  "admin-material-management": "Material Management",
-  "admin-jewellery-management": "Jewellery Management",
-  "admin-faq-management": "FAQ Management"
+  "admin-management-admin": "Admin User Management",
+  "admin-management-user": "User Management",
+  "admin-management-category": "Category Management",
+  "admin-management-gem": "Gem Management",
+  "admin-management-material": "Material Management",
+  "admin-management-jewellery": "Jewellery Management",
+  "admin-management-faq": "FAQ Management"
 }

@@ -71,37 +71,37 @@ export default function AdminLayout() {
 
   const menuList = [
     {
-      label: "admin-user-management-admin",
+      label: "admin-management-admin",
       routeName: Constant.screens.AdminUserManagementAdmin,
       icon: "user",
     },
     {
-      label: "admin-user-management-user",
+      label: "admin-management-user",
       routeName: Constant.screens.AdminUserManagementUser,
       icon: "user",
     },
     {
-      label: "admin-category-management",
+      label: "admin-management-category",
       routeName: Constant.screens.AdminCategoryManagement,
       icon: "list",
     },
     {
-      label: "admin-gem-management",
+      label: "admin-management-gem",
       routeName: Constant.screens.AdminGemManagement,
       icon: "aperture",
     },
     {
-      label: "admin-material-management",
+      label: "admin-management-material",
       routeName: Constant.screens.AdminMaterialManagement,
       icon: "archive",
     },
     {
-      label: "admin-jewellery-management",
+      label: "admin-management-jewellery",
       routeName: Constant.screens.AdminJewelleryManagement,
       icon: "target",
     },
     {
-      label: "admin-faq-management",
+      label: "admin-management-faq",
       routeName: Constant.screens.AdminFAQManagement,
       icon: "message-circle",
     },

@@ -1,0 +1,68 @@
+diff --git a/node_modules/react-native-fast-image/dist/index.cjs.js b/node_modules/react-native-fast-image/dist/index.cjs.js
+index 2df6a29..f782695 100644
+--- a/node_modules/react-native-fast-image/dist/index.cjs.js
++++ b/node_modules/react-native-fast-image/dist/index.cjs.js
+@@ -131,14 +131,20 @@ const styles = reactNative.StyleSheet.create({
+   }
+ }); // Types of requireNativeComponent are not correct.
+ 
+-const FastImageView = reactNative.requireNativeComponent('FastImageView', FastImage, {
+-  nativeOnly: {
+-    onFastImageLoadStart: true,
+-    onFastImageProgress: true,
+-    onFastImageLoad: true,
+-    onFastImageError: true,
+-    onFastImageLoadEnd: true
+-  }
+-});
++let FastImageView
++if (reactNative.Platform.OS === 'web') {
++    FastImageView = Image
++} else {
++    const { requireNativeComponent } = require('react-native')
++    FastImageView = requireNativeComponent('FastImageView', FastImage, {
++        nativeOnly: {
++            onFastImageLoadStart: true,
++            onFastImageProgress: true,
++            onFastImageLoad: true,
++            onFastImageError: true,
++            onFastImageLoadEnd: true,
++        },
++    })
++}
+ 
+ module.exports = FastImage;
+diff --git a/node_modules/react-native-fast-image/dist/index.js b/node_modules/react-native-fast-image/dist/index.js
+index 58e0308..9a98cf5 100644
+--- a/node_modules/react-native-fast-image/dist/index.js
++++ b/node_modules/react-native-fast-image/dist/index.js
+@@ -124,14 +124,20 @@ const styles = StyleSheet.create({
+   }
+ }); // Types of requireNativeComponent are not correct.
+ 
+-const FastImageView = requireNativeComponent('FastImageView', FastImage, {
+-  nativeOnly: {
+-    onFastImageLoadStart: true,
+-    onFastImageProgress: true,
+-    onFastImageLoad: true,
+-    onFastImageError: true,
+-    onFastImageLoadEnd: true
+-  }
+-});
++let FastImageView
++if (reactNative.Platform.OS === 'web') {
++    FastImageView = Image
++} else {
++    const { requireNativeComponent } = require('react-native')
++    FastImageView = requireNativeComponent('FastImageView', FastImage, {
++        nativeOnly: {
++            onFastImageLoadStart: true,
++            onFastImageProgress: true,
++            onFastImageLoad: true,
++            onFastImageError: true,
++            onFastImageLoadEnd: true,
++        },
++    })
++}
+ 
+ export default FastImage;

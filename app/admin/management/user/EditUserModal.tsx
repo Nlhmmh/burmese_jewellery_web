@@ -79,7 +79,7 @@ export const EditUserModal = ({
         <>
           <ModalHeading
             show={show}
-            title={`${t("edit")} ${t("admin-user-management-admin")}`}
+            title={`${t("edit")} ${t("admin-management-admin")}`}
           />
           <View style={{ height: 20 }} />
           <MyDivider />

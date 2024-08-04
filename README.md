@@ -26,5 +26,12 @@ https://feathericons.com/ <-- **InUse**
 ---
 
 ## Misc
+### Toubleshoot
+#### react-native-fast-image for web
+https://github.com/DylanVann/react-native-fast-image/pull/481
+npx patch-package react-native-fast-image
 
 ## TODO
+##### jewellery management
+- [ ] gem, material, category list in localstoreage 
+- [ ] CRUD

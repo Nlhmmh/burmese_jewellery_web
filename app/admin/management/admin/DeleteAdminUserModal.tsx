@@ -49,7 +49,7 @@ export const DeleteAdminUserModal = ({
         <>
           <ModalHeading
             show={show}
-            title={`${t("delete")} ${t("admin-user-management-admin")}`}
+            title={`${t("delete")} ${t("admin-management-admin")}`}
           />
           <View style={{ height: 20 }} />
           <MyDivider />

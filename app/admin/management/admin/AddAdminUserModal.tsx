@@ -1,26 +1,23 @@
 import { useSession } from "@/auth/ctx";
-import { IconBtn } from "@/components/Button";
+import { PrimaryBtn } from "@/components/Button";
 import { MailTextField, PasswordTextField } from "@/components/Forms";
 import { MyDivider } from "@/components/Misc";
 import { ModalAction, ModalHeading, MyModal } from "@/components/Modals";
 import { SelectField, TextFieldSecure } from "@/components/TextField";
-import { apiPut } from "@/utils/api";
+import { apiPost } from "@/utils/api";
 import { IndexPath } from "@ui-kitten/components";
 import { AxiosError, AxiosResponse } from "axios";
 import { t } from "i18next";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { View } from "react-native";
 import { HelperText } from "react-native-paper";
-import { AccountAdmin } from "../admin";
 
-export const EditAdminUserModal = ({
-  dataModel,
+export const AddAdminUserModal = ({
   show,
   setShow,
   onSuccess,
 }: {
-  dataModel: AccountAdmin;
   show: boolean;
   setShow: (v: boolean) => void;
   onSuccess: () => void;
@@ -32,12 +29,14 @@ export const EditAdminUserModal = ({
     handleSubmit,
     formState: { errors },
     getValues,
-    setValue,
   } = useForm({
     defaultValues: {
-      mail: "",
-      pw: "",
-      pwConfirm: "",
+      // mail: "",
+      // pw: "",
+      // pwConfirm: "",
+      mail: "admin1@gmail.com",
+      pw: "admin1",
+      pwConfirm: "admin1",
       accountAdminRole: new IndexPath(0),
       accountAdminStatus: new IndexPath(0),
     },
@@ -45,30 +44,8 @@ export const EditAdminUserModal = ({
   const [showPW, setShowPW] = useState(true);
   const [showPWConfirm, setShowPWConfirm] = useState(true);
   const [errMsg, setErrMsg] = useState("");
-  const [pwDisabled, setPWDisabled] = useState(true);
 
-  useEffect(() => {
-    if (!show) return;
-    setValue("mail", dataModel.mail);
-    setValue("pw", "");
-    setValue("pwConfirm", "");
-    setValue(
-      "accountAdminRole",
-      new IndexPath(
-        enums.account_admin_role.selects.indexOf(dataModel.account_admin_role)
-      )
-    );
-    setValue(
-      "accountAdminStatus",
-      new IndexPath(
-        enums.account_admin_status.selects.indexOf(
-          dataModel.account_admin_status
-        )
-      )
-    );
-  }, [dataModel]);
-
-  const onClickEdit = async (formData: {
+  const onClickAdd = async (formData: {
     mail: string;
     pw: string;
     pwConfirm: string;
@@ -76,12 +53,12 @@ export const EditAdminUserModal = ({
     accountAdminStatus: IndexPath;
   }) => {
     setErrMsg("");
-    apiPut({
-      url: `/api/admin/account_admin/${dataModel.account_admin_id}`,
+    apiPost({
+      url: "/api/admin/account_admin",
       token: session?.token || "",
       data: {
-        password:
-          !pwDisabled && formData.pw.length > 0 ? formData.pw : undefined,
+        mail: formData.mail,
+        password: formData.pw,
         account_admin_role:
           enums.account_admin_role.selects[formData.accountAdminRole.row],
         account_admin_status:
@@ -108,14 +85,14 @@ export const EditAdminUserModal = ({
         <>
           <ModalHeading
             show={show}
-            title={`${t("edit")} ${t("admin-user-management-admin")}`}
+            title={`${t("add")} ${t("admin-management-admin")}`}
           />
           <View style={{ height: 20 }} />
           <MyDivider />
           <View style={{ height: 20 }} />
 
           {/* ------------- Mail */}
-          <MailTextField control={control} errors={errors} disabled={true} />
+          <MailTextField control={control} errors={errors} />
           <View style={{ height: 20 }} />
 
           {/* ------------- Password */}
@@ -124,16 +101,6 @@ export const EditAdminUserModal = ({
             errors={errors}
             showPW={showPW}
             setShowPW={setShowPW}
-            disabled={pwDisabled}
-            extraBody={
-              <>
-                <View style={{ width: 10 }} />
-                <IconBtn
-                  icon="pencil"
-                  onPress={() => setPWDisabled(!pwDisabled)}
-                />
-              </>
-            }
           />
           <View style={{ height: 20 }} />
 
@@ -142,7 +109,7 @@ export const EditAdminUserModal = ({
             name="pwConfirm"
             control={control}
             rules={{
-              required: !pwDisabled,
+              required: true,
               validate: (v) => {
                 if (v !== getValues("pw"))
                   return t("Password confirm must be the same as the password");
@@ -157,7 +124,6 @@ export const EditAdminUserModal = ({
                 label={t("pw-confirm")}
                 placeholder={t("pw-confirm-placeholder")}
                 onBlur={onBlur}
-                disabled={pwDisabled}
               />
             )}
           />
@@ -218,9 +184,9 @@ export const EditAdminUserModal = ({
 
           <ModalAction
             cancelTitle={t("cancel")}
-            okTitle={t("edit")}
+            okTitle={t("add")}
             onCancel={() => setShow(false)}
-            onOK={handleSubmit(onClickEdit)}
+            onOK={handleSubmit(onClickAdd)}
           />
         </>
       }

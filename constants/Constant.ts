@@ -4,13 +4,13 @@ export const Constant = {
   screens: {
     AdminLogin: "/admin/login",
     AdminDashBoard: "/admin/dashboard",
-    AdminUserManagementAdmin: "/admin/user/management/admin",
-    AdminUserManagementUser: "/admin/user/management/user",
-    AdminCategoryManagement: "/admin/category/management",
-    AdminGemManagement: "/admin/gem/management",
-    AdminMaterialManagement: "/admin/material/management",
-    AdminJewelleryManagement: "/admin/jewellery/management",
-    AdminFAQManagement: "/admin/faq/management",
+    AdminUserManagementAdmin: "/admin/management/admin",
+    AdminUserManagementUser: "/admin/management/user",
+    AdminCategoryManagement: "/admin/management/category",
+    AdminGemManagement: "/admin/management/gem",
+    AdminMaterialManagement: "/admin/management/material",
+    AdminJewelleryManagement: "/admin/management/jewellery",
+    AdminFAQManagement: "/admin/management/faq",
   },
 
   sorts: {

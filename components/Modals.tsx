@@ -1,6 +1,7 @@
 import { Modal } from "@ui-kitten/components";
 import { t } from "i18next";
-import { Text, View, ViewStyle } from "react-native";
+import { DimensionValue, Text, View, ViewStyle } from "react-native";
+import ImageViewer from "react-native-image-zoom-viewer";
 import { PrimaryBtn } from "./Button";
 import { MyAnimatedIcon } from "./Icons";
 
@@ -13,6 +14,7 @@ export function MyModal({
     paddingHorizontal: 10,
     paddingVertical: 20,
   },
+  width = "30%",
 }: {
   show: boolean;
   setShow: (v: boolean) => void;
@@ -26,13 +28,14 @@ export function MyModal({
     | "space-evenly"
     | undefined;
   style?: ViewStyle;
+  width?: DimensionValue | undefined;
 }) {
   return (
     <Modal
       visible={show}
       backdropStyle={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
       style={{
-        width: "30%",
+        width: width,
         backgroundColor: "white",
         justifyContent: justifyContent,
         borderRadius: 20,
@@ -146,3 +149,48 @@ export function ModalAction({
     </View>
   );
 }
+
+export const ImageViewerModal = ({
+  image,
+  show,
+  setShow,
+}: {
+  image: string;
+  show: boolean;
+  setShow: (v: boolean) => void;
+}) => {
+  return (
+    <MyModal
+      show={show}
+      setShow={setShow}
+      width={"50%"}
+      style={{
+        alignItems: "center",
+      }}
+      body={
+        <>
+          <View
+            style={{
+              width: "100%",
+              height: 500,
+              display: "flex",
+              borderRadius: 30,
+            }}
+          >
+            <ImageViewer
+              imageUrls={[
+                {
+                  url: image,
+                },
+              ]}
+              backgroundColor="white"
+              style={{
+                borderRadius: 30,
+              }}
+            />
+          </View>
+        </>
+      }
+    />
+  );
+};
