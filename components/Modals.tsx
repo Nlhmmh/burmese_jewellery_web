@@ -58,6 +58,7 @@ export function ErrorModal({
       show={show}
       setShow={setShow}
       justifyContent="center"
+      style={{ alignItems: "center", padding: 20 }}
       body={
         <>
           <MyAnimatedIcon

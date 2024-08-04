@@ -139,7 +139,7 @@ export default function Layout() {
             value={searchRole}
             setValue={(v) => setSearchRole(v)}
             items={enums.account_admin_role.selects || []}
-            placeholder={t("status-placeholder")}
+            placeholder={t("role-placeholder")}
           />
           <View style={{ width: 10 }} />
           <SelectField

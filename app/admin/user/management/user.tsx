@@ -12,6 +12,7 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { Clipboard, Text, View } from "react-native";
 import { DataTable } from "react-native-paper";
+import { EditUserModal } from "./user/EditUserModal";
 
 export interface Account {
   key: string;
@@ -51,6 +52,27 @@ export default function Layout() {
   const [searchFirstName, setSearchFirstname] = useState("");
   const [searchLastName, setSearchLastName] = useState("");
   const [searchStatus, setSearchStatus] = useState(new IndexPath(0));
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editDelModel, setEditDelModel] = useState<Account>({
+    key: "",
+    account: {
+      account_id: "",
+      account_status: "",
+      created_at: "",
+      mail: "",
+      updated_at: "",
+      login_type: "",
+    },
+    account_profile: {
+      created_at: "",
+      updated_at: "",
+      account_id: "",
+      birthday: "",
+      first_name: "",
+      gender: "",
+      last_name: "",
+    },
+  });
 
   const showErrMsg = (errMsg: string) => {
     setShowErrModal(true);
@@ -139,7 +161,7 @@ export default function Layout() {
             value={searchStatus}
             setValue={(v) => setSearchStatus(v)}
             items={enums.account_status.selects || []}
-            label={t("unselected")}
+            placeholder={t("status-placeholder")}
           />
           <View style={{ width: 10 }} />
           <IconBtn icon="search" onPress={() => fetch()} size={30} />
@@ -165,6 +187,9 @@ export default function Layout() {
             {t("created-at")}
           </DataTable.Title>
           <DataTable.Title>{t("updated-at")}</DataTable.Title>
+          <DataTable.Title style={{ flex: 0.5 }}>
+            {t("actions")}
+          </DataTable.Title>
         </DataTable.Header>
 
         {loading && (
@@ -218,6 +243,16 @@ export default function Layout() {
               <DataTable.Cell>
                 <Text>{v.account.updated_at}</Text>
               </DataTable.Cell>
+              <DataTable.Cell style={{ flex: 0.5 }}>
+                <IconBtn
+                  icon="edit"
+                  size={30}
+                  onPress={() => {
+                    setEditDelModel(v);
+                    setShowEditModal(true);
+                  }}
+                />
+              </DataTable.Cell>
             </DataTable.Row>
           ))}
 
@@ -238,6 +273,13 @@ export default function Layout() {
         show={showErrModal}
         setShow={setShowErrModal}
         errMsg={errMsg}
+      />
+
+      <EditUserModal
+        dataModel={editDelModel}
+        show={showEditModal}
+        setShow={setShowEditModal}
+        onSuccess={() => fetch()}
       />
     </>
   );

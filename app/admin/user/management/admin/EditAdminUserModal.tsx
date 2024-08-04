@@ -80,7 +80,8 @@ export const EditAdminUserModal = ({
       url: `/api/admin/account_admin/${dataModel.account_admin_id}`,
       token: session?.token || "",
       data: {
-        // password: formData.pw,
+        password:
+          !pwDisabled && formData.pw.length > 0 ? formData.pw : undefined,
         account_admin_role:
           enums.account_admin_role.selects[formData.accountAdminRole.row],
         account_admin_status:
