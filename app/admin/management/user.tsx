@@ -158,7 +158,7 @@ export default function AdminManagementUser() {
           />
           <View style={{ width: 10 }} />
           <SelectField
-            value={searchStatus}
+            val={searchStatus}
             setValue={(v) => setSearchStatus(v)}
             items={enums.account_status.selects || []}
             placeholder={t("status-placeholder")}

@@ -21,4 +21,18 @@ export const Constant = {
   dateFormat: "YYYY-MM-DD HH:mm:ss Z",
   mailCheckPattern:
     /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
+  trueFalseSelects: [
+    {
+      key: "",
+      value: undefined,
+    },
+    {
+      key: "True",
+      value: true,
+    },
+    {
+      key: "False",
+      value: false,
+    },
+  ],
 };

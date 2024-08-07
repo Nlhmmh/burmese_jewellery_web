@@ -22,7 +22,6 @@ import {
   DefaultTheme as PaperDefaultTheme,
   PaperProvider,
 } from "react-native-paper";
-import "react-native-reanimated";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -48,35 +47,35 @@ export default function RootLayout() {
   if (!loaded) return null;
   return (
     <SessionProvider>
-      <SafeAreaView style={{ flex: 1 }}>
-        <PaperProvider theme={theme}>
-          <IconRegistry
-            icons={[
-              EvaIconsPack,
-              FeatherIconsPack,
-              MaterialCommunityIconsPack,
-              FontAwesomeIconsPack,
-            ]}
-          />
-          <ApplicationProvider
-            {...eva}
-            theme={{
-              ...(colorScheme === "dark" ? eva.dark : eva.light),
-              ...myTheme,
-            }}
+      <PaperProvider theme={theme}>
+        <IconRegistry
+          icons={[
+            EvaIconsPack,
+            FeatherIconsPack,
+            MaterialCommunityIconsPack,
+            FontAwesomeIconsPack,
+          ]}
+        />
+        <ApplicationProvider
+          {...eva}
+          theme={{
+            ...(colorScheme === "dark" ? eva.dark : eva.light),
+            ...myTheme,
+          }}
+        >
+          <ThemeProvider
+            value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
           >
-            <ThemeProvider
-              value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-            >
-              <Stack>
+            <SafeAreaView style={{ flex: 1 }}>
+              <Stack initialRouteName="(app)">
                 <Stack.Screen name="(app)" options={{ headerShown: false }} />
                 <Stack.Screen name="admin" options={{ headerShown: false }} />
                 <Stack.Screen name="+not-found" />
               </Stack>
-            </ThemeProvider>
-          </ApplicationProvider>
-        </PaperProvider>
-      </SafeAreaView>
+            </SafeAreaView>
+          </ThemeProvider>
+        </ApplicationProvider>
+      </PaperProvider>
     </SessionProvider>
   );
 }

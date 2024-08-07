@@ -177,7 +177,7 @@ export const EditAdminUserModal = ({
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <SelectField
-                value={value}
+                val={value}
                 setValue={(v) => onChange(v)}
                 items={enums.account_admin_role.selects || []}
                 label={t("role")}
@@ -199,7 +199,7 @@ export const EditAdminUserModal = ({
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <SelectField
-                value={value}
+                val={value}
                 setValue={(v) => onChange(v)}
                 items={enums.account_admin_status.selects || []}
                 label={t("status")}

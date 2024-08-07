@@ -136,14 +136,14 @@ export default function AdminManagementAdminUserScreen() {
           />
           <View style={{ width: 10 }} />
           <SelectField
-            value={searchRole}
+            val={searchRole}
             setValue={(v) => setSearchRole(v)}
             items={enums.account_admin_role.selects || []}
             placeholder={t("role-placeholder")}
           />
           <View style={{ width: 10 }} />
           <SelectField
-            value={searchStatus}
+            val={searchStatus}
             setValue={(v) => setSearchStatus(v)}
             items={enums.account_admin_status.selects || []}
             placeholder={t("status-placeholder")}

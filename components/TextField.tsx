@@ -1,5 +1,8 @@
 import { Icon, Input, Select, SelectItem } from "@ui-kitten/components";
-import { TouchableWithoutFeedback } from "@ui-kitten/components/devsupport";
+import {
+  IndexPath,
+  TouchableWithoutFeedback,
+} from "@ui-kitten/components/devsupport";
 import { DimensionValue, Text, View } from "react-native";
 
 function Label({
@@ -24,7 +27,9 @@ export function TextField({
   placeholder,
   onBlur,
   width,
+  height,
   disabled = false,
+  multiline = false,
 }: {
   value: string;
   setValue: (v: string) => void;
@@ -32,7 +37,9 @@ export function TextField({
   placeholder?: string;
   onBlur?: (e: any) => void;
   width?: DimensionValue | undefined;
+  height?: DimensionValue | undefined;
   disabled?: boolean;
+  multiline?: boolean;
 }) {
   return (
     <Input
@@ -42,11 +49,13 @@ export function TextField({
       }}
       placeholder={placeholder || ""}
       size="large"
-      style={{ borderRadius: 10, flex: 1, width: width }}
+      style={{ borderRadius: 5, width: width }}
+      textStyle={{ height: height }}
       value={value}
       onChangeText={(v) => setValue(v)}
       onBlur={onBlur}
       disabled={disabled}
+      multiline={multiline}
     />
   );
 }
@@ -79,7 +88,7 @@ export function TextFieldSecure({
       label={() => <Label label={label} extraBody={extraBody} />}
       placeholder={placeholder || ""}
       size="large"
-      style={{ borderRadius: 10, flex: 1, width: width }}
+      style={{ borderRadius: 5, flex: 1, width: width }}
       value={value}
       onChangeText={(v) => setValue(v)}
       secureTextEntry={show}
@@ -95,21 +104,23 @@ export function TextFieldSecure({
 }
 
 export function SelectField({
-  value,
+  val,
   setValue,
   items,
   width,
   label,
   placeholder,
   onBlur,
+  itemDisplay = (v: any) => v,
 }: {
-  value: any;
+  val: IndexPath;
   setValue: (v: any) => void;
-  items: Array<string>;
+  items: Array<any>;
   width?: DimensionValue | undefined;
   label?: string;
   placeholder?: string;
   onBlur?: (e: any) => void;
+  itemDisplay?: (v: any) => string;
 }) {
   return (
     <Select
@@ -117,16 +128,22 @@ export function SelectField({
         if (label) return <Label label={label} />;
         return <></>;
       }}
-      selectedIndex={value}
+      selectedIndex={val}
       onSelect={(v) => setValue(v)}
-      value={items[value.row] === "" ? placeholder : items[value.row]}
+      value={
+        !val
+          ? placeholder
+          : items.at(val.row) === ""
+          ? placeholder
+          : itemDisplay(items.at(val.row))
+      }
       size="large"
-      style={{ flex: 1, width: width }}
+      style={{ flex: 1, width: width, borderRadius: 10 }}
       onBlur={onBlur}
       placeholder={placeholder}
     >
-      {items.map((v) => (
-        <SelectItem key={v} title={v} />
+      {items.map((v, i) => (
+        <SelectItem key={i} title={itemDisplay(v)} />
       ))}
     </Select>
   );

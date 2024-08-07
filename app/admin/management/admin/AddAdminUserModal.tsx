@@ -1,5 +1,4 @@
 import { useSession } from "@/auth/ctx";
-import { PrimaryBtn } from "@/components/Button";
 import { MailTextField, PasswordTextField } from "@/components/Forms";
 import { MyDivider } from "@/components/Misc";
 import { ModalAction, ModalHeading, MyModal } from "@/components/Modals";
@@ -31,12 +30,9 @@ export const AddAdminUserModal = ({
     getValues,
   } = useForm({
     defaultValues: {
-      // mail: "",
-      // pw: "",
-      // pwConfirm: "",
-      mail: "admin1@gmail.com",
-      pw: "admin1",
-      pwConfirm: "admin1",
+      mail: "",
+      pw: "",
+      pwConfirm: "",
       accountAdminRole: new IndexPath(0),
       accountAdminStatus: new IndexPath(0),
     },
@@ -143,7 +139,7 @@ export const AddAdminUserModal = ({
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <SelectField
-                value={value}
+                val={value}
                 setValue={(v) => onChange(v)}
                 items={enums.account_admin_role.selects || []}
                 label={t("role")}
@@ -165,7 +161,7 @@ export const AddAdminUserModal = ({
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <SelectField
-                value={value}
+                val={value}
                 setValue={(v) => onChange(v)}
                 items={enums.account_admin_status.selects || []}
                 label={t("status")}

@@ -1,5 +1,4 @@
 import { useSession } from "@/auth/ctx";
-import { MailTextField } from "@/components/Forms";
 import { MyDivider, TextRow } from "@/components/Misc";
 import { ModalAction, ModalHeading, MyModal } from "@/components/Modals";
 import { SelectField } from "@/components/TextField";
@@ -145,7 +144,7 @@ export const EditUserModal = ({
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <SelectField
-                value={value}
+                val={value}
                 setValue={(v) => onChange(v)}
                 items={enums.account_status.selects || []}
                 label={t("status")}

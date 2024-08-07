@@ -3,137 +3,77 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 
 const isDebug = true;
 
-export interface APIGetProps {
+interface APIGetProps {
   url: string;
-  token: string | undefined;
+  token?: string | undefined;
   then: (resp: AxiosResponse) => void;
   onCatch?: (e: AxiosError) => void;
   onFinally?: () => void;
 }
 
-export const apiGet = ({
-  url,
-  token,
-  then,
-  onCatch,
-  onFinally,
-}: APIGetProps) => {
-  axios
-    .get(Constant.apiURL + url, {
+export const apiGet = async (props: APIGetProps) => {
+  return await axios
+    .get(Constant.apiURL + props.url, {
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization:
+          props.token && props.token !== "" ? "Bearer " + props.token : null,
       },
       validateStatus: (status) => status < 500,
     })
     .then((resp: AxiosResponse) => {
       if (isDebug) console.log(resp);
-      then(resp);
+      props.then(resp);
     })
     .catch((e: AxiosError) => {
       console.error(e);
-      if (onCatch) onCatch(e);
+      if (props.onCatch) props.onCatch(e);
     })
     .finally(() => {
-      if (onFinally) onFinally();
+      if (props.onFinally) props.onFinally();
     });
 };
 
-export interface APIPostProps {
+interface APIProps {
   url: string;
-  data: any;
-  token: string | undefined;
+  data?: any;
+  token?: string | undefined;
   then: (resp: AxiosResponse) => void;
   onCatch?: (e: AxiosError) => void;
   onFinally?: () => void;
 }
 
-export interface APIDelProps {
-  url: string;
-  token: string | undefined;
-  then: (resp: AxiosResponse) => void;
-  onCatch?: (e: AxiosError) => void;
-  onFinally?: () => void;
-}
-
-export const apiPost = ({
-  url,
-  data,
-  token,
-  then,
-  onCatch,
-  onFinally,
-}: APIPostProps) => {
-  axios
-    .post(Constant.apiURL + url, data, {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-      validateStatus: (status) => status < 500,
-    })
+const callAPI = async (method: string, props: APIProps) => {
+  return await axios({
+    method: method,
+    url: Constant.apiURL + props.url,
+    data: props.data,
+    headers: {
+      Authorization:
+        props.token && props.token !== "" ? "Bearer " + props.token : null,
+    },
+    validateStatus: (status) => status < 500,
+  })
     .then((resp: AxiosResponse) => {
       if (isDebug) console.log(resp);
-      then(resp);
+      props.then(resp);
     })
     .catch((e: AxiosError) => {
       console.error(e);
-      if (onCatch) onCatch(e);
+      if (props.onCatch) props.onCatch(e);
     })
     .finally(() => {
-      if (onFinally) onFinally();
+      if (props.onFinally) props.onFinally();
     });
 };
 
-export const apiPut = ({
-  url,
-  data,
-  token,
-  then,
-  onCatch,
-  onFinally,
-}: APIPostProps) => {
-  axios
-    .put(Constant.apiURL + url, data, {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-      validateStatus: (status) => status < 500,
-    })
-    .then((resp: AxiosResponse) => {
-      if (isDebug) console.log(resp);
-      then(resp);
-    })
-    .catch((e: AxiosError) => {
-      console.error(e);
-      if (onCatch) onCatch(e);
-    })
-    .finally(() => {
-      if (onFinally) onFinally();
-    });
+export const apiPost = async (props: APIProps) => {
+  return await callAPI("POST", props);
 };
 
-export const apiDel = ({
-  url,
-  token,
-  then,
-  onCatch,
-  onFinally,
-}: APIDelProps) => {
-  axios
-    .delete(Constant.apiURL + url, {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-      validateStatus: (status) => status < 500,
-    })
-    .then((resp: AxiosResponse) => {
-      if (isDebug) console.log(resp);
-      then(resp);
-    })
-    .catch((e: AxiosError) => {
-      console.error(e);
-      if (onCatch) onCatch(e);
-    })
-    .finally(() => {
-      if (onFinally) onFinally();
-    });
+export const apiPut = async (props: APIProps) => {
+  return await callAPI("PUT", props);
+};
+
+export const apiDel = async (props: APIProps) => {
+  return await callAPI("DELETE", props);
 };

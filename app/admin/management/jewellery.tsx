@@ -2,22 +2,30 @@ import { useSession } from "@/auth/ctx";
 import { IconBtn } from "@/components/Button";
 import { CenterView } from "@/components/Misc";
 import { ErrorModal, ImageViewerModal } from "@/components/Modals";
-import { TextField } from "@/components/TextField";
+import { SelectField, TextField } from "@/components/TextField";
 import { Constant } from "@/constants/Constant";
 import { apiGet } from "@/utils/api";
+import { fromObjToArrayWithDefault } from "@/utils/utils";
+import { IndexPath } from "@ui-kitten/components";
 import { AxiosError, AxiosResponse } from "axios";
 import { t } from "i18next";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { Clipboard, Image, Text, View } from "react-native";
 import { DataTable } from "react-native-paper";
+import { AddJewelleryModal } from "./jewellery/AddJewelleryModal";
+import { DeleteJewelleryModal } from "./jewellery/DeleteJewelleryModal";
+import { EditJewelleryModal } from "./jewellery/EditJewelleryModal";
 
 export interface Jewellery {
   key: string;
   jewellery_id: string;
   category_id: string;
+  category_name: string;
   gem_id: string;
+  gem_name: string;
   material_id: string;
+  material_name: string;
   name: string;
   description: string;
   price: number;
@@ -29,8 +37,13 @@ export interface Jewellery {
 }
 
 export default function AdminManagementJewelleryScreen() {
-  const { getEnums, session } = useSession();
-  const [enums] = useState(getEnums());
+  const { session, getGems, getMaterials, getCategories } = useSession();
+  const [gems] = useState(getGems());
+  const [gemsArray] = useState(fromObjToArrayWithDefault(gems));
+  const [materials] = useState(getMaterials());
+  const [materialsArray] = useState(fromObjToArrayWithDefault(materials));
+  const [categories] = useState(getCategories());
+  const [categoriesArray] = useState(fromObjToArrayWithDefault(categories));
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(Constant.limits[0]);
   const [totalItemCount, setTotalItemCount] = useState(0);
@@ -42,6 +55,10 @@ export default function AdminManagementJewelleryScreen() {
   const [errMsg, setErrMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const [searchID, setSearchID] = useState("");
+  const [searchIsPublished, setSearchIsPublished] = useState(new IndexPath(0));
+  const [searchGem, setSearchGem] = useState(new IndexPath(0));
+  const [searchMaterial, setSearchMaterial] = useState(new IndexPath(0));
+  const [searchCategory, setSearchCategory] = useState(new IndexPath(0));
   const [searchName, setSearchName] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -49,8 +66,11 @@ export default function AdminManagementJewelleryScreen() {
     key: "",
     jewellery_id: "",
     category_id: "",
+    category_name: "",
     gem_id: "",
+    gem_name: "",
     material_id: "",
+    material_name: "",
     name: "",
     description: "",
     price: 0,
@@ -74,6 +94,20 @@ export default function AdminManagementJewelleryScreen() {
     let url = `/api/jewellery?offset=${from}&limit=${limit}&sort=${sort}`;
     if (searchID !== "") url += `&id=${searchID}`;
     if (searchName !== "") url += `&name=${searchName}`;
+    if (Constant.trueFalseSelects[searchIsPublished.row].key !== "") {
+      url += `&is_published=${
+        Constant.trueFalseSelects[searchIsPublished.row].value
+      }`;
+    }
+    if (gemsArray[searchGem.row].key !== "") {
+      url += `&gem_id=${gemsArray[searchGem.row].key}`;
+    }
+    if (materialsArray[searchMaterial.row].key !== "") {
+      url += `&material_id=${materialsArray[searchMaterial.row].key}`;
+    }
+    if (categoriesArray[searchCategory.row].key !== "") {
+      url += `&category_id=${categoriesArray[searchCategory.row].key}`;
+    }
     apiGet({
       url: url,
       token: session ? session?.token : "",
@@ -85,6 +119,9 @@ export default function AdminManagementJewelleryScreen() {
         if (!resp.data.data) return;
         for (const v of resp.data.data) {
           v.key = v.jewellery_id;
+          v.gem_name = getGems()[v.gem_id];
+          v.material_name = getMaterials()[v.material_id];
+          v.category_name = getCategories()[v.category_id].name;
           v.created_at = moment(v.created_at).format(Constant.dateFormat);
           v.updated_at = moment(v.updated_at).format(Constant.dateFormat);
         }
@@ -122,15 +159,56 @@ export default function AdminManagementJewelleryScreen() {
 
         <View style={{ flexDirection: "row" }}>
           <TextField
+            width={"10%"}
             value={searchID}
             setValue={(v) => setSearchID(v)}
             placeholder={t("id")}
           />
           <View style={{ width: 10 }} />
           <TextField
+            width={"10%"}
             value={searchName}
             setValue={(v) => setSearchName(v)}
             placeholder={t("name")}
+          />
+          <View style={{ width: 10 }} />
+          <SelectField
+            width={100}
+            val={searchIsPublished}
+            setValue={(v) => setSearchIsPublished(v)}
+            items={Constant.trueFalseSelects || []}
+            placeholder={t("is-published-placeholder")}
+            itemDisplay={(v) =>
+              v.key === "" ? t("is-published-placeholder") : v.key
+            }
+          />
+          <View style={{ width: 10 }} />
+          <SelectField
+            width={100}
+            val={searchGem}
+            setValue={(v) => setSearchGem(v)}
+            items={gemsArray || []}
+            placeholder={t("gem-placeholder")}
+            itemDisplay={(v) => v.value || t("gem-placeholder")}
+          />
+          <View style={{ width: 10 }} />
+          <SelectField
+            width={100}
+            val={searchMaterial}
+            setValue={(v) => setSearchMaterial(v)}
+            items={materialsArray || []}
+            placeholder={t("material-placeholder")}
+            itemDisplay={(v) => v.value || t("material-placeholder")}
+          />
+          <View style={{ width: 10 }} />
+          <SelectField
+            width={100}
+            val={searchCategory}
+            setValue={(v) => setSearchCategory(v)}
+            items={categoriesArray || []}
+            itemDisplay={(v) =>
+              (v.value && v.value.name) || t("category-placeholder")
+            }
           />
           <View style={{ width: 10 }} />
           <IconBtn
@@ -215,13 +293,13 @@ export default function AdminManagementJewelleryScreen() {
                 <Text>{v.is_published ? "True" : "False"}</Text>
               </DataTable.Cell>
               <DataTable.Cell>
-                <Text>{v.material_id}</Text>
+                <Text>{v.material_name}</Text>
               </DataTable.Cell>
               <DataTable.Cell>
-                <Text>{v.gem_id}</Text>
+                <Text>{v.gem_name}</Text>
               </DataTable.Cell>
               <DataTable.Cell>
-                <Text>{v.category_id}</Text>
+                <Text>{v.category_name}</Text>
               </DataTable.Cell>
               <DataTable.Cell>
                 <Text>{v.created_at}</Text>
@@ -270,25 +348,25 @@ export default function AdminManagementJewelleryScreen() {
         errMsg={errMsg}
       />
 
-      {/* <AddAdminUserModal
+      <AddJewelleryModal
         show={showAddModal}
         setShow={setShowAddModal}
         onSuccess={() => fetch()}
-      /> */}
+      />
 
-      {/* <EditAdminUserModal
+      <EditJewelleryModal
         dataModel={editDelModel}
         show={showEditModal}
         setShow={setShowEditModal}
         onSuccess={() => fetch()}
       />
 
-      <DeleteAdminUserModal
+      <DeleteJewelleryModal
         dataModel={editDelModel}
         show={delModal}
         setShow={setDelModal}
         onSuccess={() => fetch()}
-      /> */}
+      />
 
       <ImageViewerModal image={image} show={showImage} setShow={setShowImage} />
     </>
