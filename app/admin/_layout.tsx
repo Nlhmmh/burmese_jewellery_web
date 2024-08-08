@@ -10,7 +10,7 @@ export default function AdminLayout() {
   const { session, isLoading } = useSession();
   const path = usePathname();
 
-  if (isLoading) return <Text>Loading...</Text>;
+  if (!isLoading) return <Text>Loading...</Text>;
 
   if (!session || session!.token === "" || session!.isAdmin === false) {
     if (path !== Constant.screens.AdminLogin)

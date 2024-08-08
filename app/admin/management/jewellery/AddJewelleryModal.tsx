@@ -6,11 +6,13 @@ import { apiPost } from "@/utils/api";
 import { fromObjToArray, numberOnly } from "@/utils/utils";
 import { CheckBox, IndexPath } from "@ui-kitten/components";
 import { AxiosError, AxiosResponse } from "axios";
+import * as ImagePicker from "expo-image-picker";
 import { t } from "i18next";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { ScrollView, View } from "react-native";
 import { HelperText } from "react-native-paper";
+import { UploadPhoto } from "./UploadPhoto";
 
 export const AddJewelleryModal = ({
   show,
@@ -48,6 +50,7 @@ export const AddJewelleryModal = ({
     },
   });
   const [errMsg, setErrMsg] = useState("");
+  const [photo, setPhoto] = useState(null);
 
   const onClickAdd = async (formData: {
     name: string;
@@ -74,7 +77,7 @@ export const AddJewelleryModal = ({
         gem_id: gemsArray[formData.gemID.row].key,
         material_id: materialsArray[formData.materialID.row].key,
         image_url:
-          "https://media.tiffany.com/is/image/Tiffany/EcomItemL2/tiffany-foreverband-ring-16574635_1045538_ED_M.jpg?&op_usm=1.75,1.0,6.0&$cropN=0.1,0.1,0.8,0.8&defaultImage=NoImageAvailableInternal&&defaultImage=NoImageAvailableInternal&fmt=webp",
+          "https://media.tiffany.com/is/image/Tiffany/EcomBrowseM/tiffany-tsmile-pendant-33637179_958193_ED_M.jpg?defaultImage=NoImageAvailableInternal&fmt=webp",
       },
       then: (resp: AxiosResponse) => {
         if (resp.status !== 200) {
@@ -88,6 +91,21 @@ export const AddJewelleryModal = ({
       },
       onCatch: (e: AxiosError) => setErrMsg(e.message),
     });
+  };
+
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled && result.assets.length > 0) {
+      setPhoto(result.assets[0]);
+    }
   };
 
   return (
@@ -295,6 +313,10 @@ export const AddJewelleryModal = ({
             {errors.materialID?.type === "required" && (
               <HelperText type="error">{t("required")}</HelperText>
             )}
+            <View style={{ height: 10 }} />
+
+            {/* ------------- Photo */}
+            <UploadPhoto onUploadPhoto={(v) => setPhoto(v)} />
             <View style={{ height: 10 }} />
           </ScrollView>
 

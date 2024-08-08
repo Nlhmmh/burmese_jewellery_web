@@ -32,19 +32,25 @@ export function PrimaryBtn({
 export function CardBtn({
   title,
   onPress,
+  width = "30%",
+  height = 200,
+  color = myTheme["color-primary-500"],
 }: {
   title: string;
   onPress: () => void;
+  width?: DimensionValue | undefined;
+  height?: DimensionValue | undefined;
+  color?: string;
 }) {
   return (
-    <View style={{ padding: 10, width: "30%" }}>
+    <View style={{ padding: 10, width: width }}>
       <TouchableOpacity onPress={onPress} activeOpacity={0.5}>
         <View
           style={{
-            height: 200,
+            height: height,
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: myTheme["color-primary-500"],
+            backgroundColor: color,
             borderRadius: 10,
             padding: 10,
           }}
