@@ -20,9 +20,10 @@ export async function setStorageItemAsync(key: string, value: string | null) {
   if (Platform.OS === "web") {
     try {
       if (value === null) {
-        localStorage.removeItem(key);
+        if (typeof localStorage !== "undefined") localStorage.removeItem(key);
       } else {
-        localStorage.setItem(key, value);
+        if (typeof localStorage !== "undefined")
+          localStorage.setItem(key, value);
       }
     } catch (e) {
       console.error("Local storage is unavailable:", e);

@@ -29,6 +29,7 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    RobotoSlab: require("../assets/fonts/RobotoSlab-VariableFont_wght.ttf"),
   });
 
   const theme = {

@@ -21,7 +21,8 @@ https://shoutem.github.io/docs/ui-toolkit/components/typography
 https://magnus-ui.com/docs/getting-started/
 ### Icons
 https://github.com/oblador/react-native-vector-icons?tab=readme-ov-file#react-native-vector-icons
-https://feathericons.com/ <-- **InUse**
+https://feathericons.com/
+https://fontawesome.com/v5/search?q=plus&o=r&m=free <-- **InUse**
 
 ---
 

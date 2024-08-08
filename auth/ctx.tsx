@@ -50,6 +50,7 @@ export function useSession() {
 
 export function SessionProvider({ children }: PropsWithChildren) {
   const [isFetchedInitData, setIsFetchedInitData] = useState(false);
+  const [isFetchCompleted, setIsFetchCompleted] = useState(false);
   const [[isLoadingToken, token], setToken] = useStorageState("token");
   const [[isLoadingIsAdmin, isAdmin], setIsAdmin] = useStorageState("isAdmin");
   const [[isLoadingEnums, enums], setEnums] = useStorageState("enums");
@@ -59,17 +60,24 @@ export function SessionProvider({ children }: PropsWithChildren) {
   const [[isLoadedCategories, categories], setCategories] =
     useStorageState("categories");
   const isLoading =
-    isFetchedInitData &&
+    isFetchCompleted &&
     isLoadingToken &&
     isLoadingIsAdmin &&
     isLoadingEnums &&
     isLoadedGems &&
     isLoadedMaterials &&
     isLoadedCategories;
+
+  const fetch = async () => {
+    await fetchInitDate(setEnums, setGems, setMaterials, setCategories);
+    setIsFetchCompleted(true);
+  };
+
   if (!isFetchedInitData) {
-    fetchInitDate(setEnums, setGems, setMaterials, setCategories);
+    fetch();
     setIsFetchedInitData(true);
   }
+
   return (
     <AuthContext.Provider
       value={{
@@ -85,7 +93,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
           token: token,
           isAdmin: isAdmin,
         },
-        isLoading: isLoading,
+        isLoading: isFetchCompleted,
         setEnums: (v: string) => setEnums(v),
         getEnums: () => JSON.parse(enums),
         setGems: (v: string) => setGems(v),

@@ -1,6 +1,8 @@
 {
   "title": "Burmese Jewellery",
-  "home-title": "Welcome to Burmese Jewellery",
+  "home-title": "Hidden Treasure to Explore",
+  "admin": "Admin",
+  "dashboard": "Dashboard",
 
   "id": "ID",
   "id-placeholder": "Enter your search id",
@@ -32,8 +34,10 @@
   "updated-at": "Updated At",
   "actions": "Actions",
   "name": "Name",
+  "name-placeholder": "Enter name",
   "name-max-length": "Name must be less than 255 characters",
   "description": "Description",
+  "description-placeholder": "Enter description",
   "description-max-length": "Description must be less than 255 characters",
   "price": "Price",
   "quantity": "Quantity",
@@ -66,5 +70,9 @@
   "admin-management-gem": "Gem Management",
   "admin-management-material": "Material Management",
   "admin-management-jewellery": "Jewellery Management",
-  "admin-management-faq": "FAQ Management"
+  "admin-management-faq": "FAQ Management",
+
+  "shop-by-category": "Shop by Category",
+
+  "test": "test"
 }

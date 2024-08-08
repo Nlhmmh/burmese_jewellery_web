@@ -5,6 +5,7 @@ import { Constant } from "@/constants/Constant";
 import { Styles } from "@/constants/Styles";
 import { Avatar, Text } from "@ui-kitten/components";
 import { router, usePathname } from "expo-router";
+import { t } from "i18next";
 import { useState } from "react";
 import { TouchableOpacity, View } from "react-native";
 import { IconButton, Menu } from "react-native-paper";
@@ -35,11 +36,11 @@ export function AdminNavBar({}) {
       >
         <View>
           <Text category="s1" style={{ textAlign: "center" }}>
-            Burmese Jewellery
+            {t("title")}
           </Text>
           <View style={{ height: 5 }} />
           <Text category="c1" style={{ textAlign: "center" }}>
-            Admin
+            {t("admin")}
           </Text>
         </View>
       </TouchableOpacity>
@@ -52,13 +53,13 @@ export function AdminNavBar({}) {
         {path != Constant.screens.AdminDashBoard && (
           <Menu.Item
             onPress={() => router.push(Constant.screens.AdminDashBoard)}
-            title="Dash Board"
+            title={t("dashboard")}
           />
         )}
         {!session && path != Constant.screens.AdminLogin && (
           <Menu.Item
             onPress={() => router.push(Constant.screens.AdminLogin)}
-            title="Login"
+            title={t("login")}
           />
         )}
         {session && <Menu.Item onPress={() => signOut()} title="Log Out" />}
