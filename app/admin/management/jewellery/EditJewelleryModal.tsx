@@ -78,9 +78,6 @@ export const EditJewelleryModal = ({
         materialsArray.findIndex((v) => v.key === dataModel.material_id)
       )
     );
-    setPhoto({
-      uri: dataModel.image_url,
-    });
   }, [dataModel]);
 
   const onClickEdit = async (formData: {
@@ -94,50 +91,74 @@ export const EditJewelleryModal = ({
     materialID: IndexPath;
   }) => {
     setErrMsg("");
-    if (!photo) {
-      setErrMsg(t("photo-required"));
+    if (photo) {
+      apiPostUploadFile({
+        url: "/api/file",
+        token: session?.token || "",
+        data: photo,
+        then: (resp: AxiosResponse) => {
+          if (resp.status !== 200) {
+            if (!resp.data) return;
+            setErrMsg(resp.data.message || resp.data.error || "");
+            return;
+          }
+          if (resp.data && resp.data === "") {
+            setErrMsg(t("Image upload failed"));
+            return;
+          }
+          const imageURL = `${Constant.apiURL}/api/file/${resp.data}`;
+          apiPut({
+            url: `/api/admin/jewellery/${dataModel.jewellery_id}`,
+            token: session?.token || "",
+            data: {
+              name: formData.name,
+              description: formData.description,
+              quantity: formData.quantity,
+              price: formData.price,
+              is_published: formData.isPublished,
+              category_id: categoriesArray[formData.categoryID.row].key,
+              gem_id: gemsArray[formData.gemID.row].key,
+              material_id: materialsArray[formData.materialID.row].key,
+              image_url: imageURL,
+            },
+            then: (resp: AxiosResponse) => {
+              if (resp.status !== 200) {
+                if (!resp.data) return;
+                setErrMsg(resp.data.message || resp.data.error || "");
+                return;
+              }
+              setShow(false);
+              onSuccess();
+            },
+            onCatch: (e: AxiosError) => setErrMsg(e.message),
+          });
+        },
+        onCatch: (e: AxiosError) => setErrMsg(e.message),
+      });
       return;
     }
-    apiPostUploadFile({
-      url: "/api/file",
+    apiPut({
+      url: `/api/admin/jewellery/${dataModel.jewellery_id}`,
       token: session?.token || "",
-      data: photo,
+      data: {
+        name: formData.name,
+        description: formData.description,
+        quantity: formData.quantity,
+        price: formData.price,
+        is_published: formData.isPublished,
+        category_id: categoriesArray[formData.categoryID.row].key,
+        gem_id: gemsArray[formData.gemID.row].key,
+        material_id: materialsArray[formData.materialID.row].key,
+        image_url: dataModel.image_url,
+      },
       then: (resp: AxiosResponse) => {
         if (resp.status !== 200) {
           if (!resp.data) return;
           setErrMsg(resp.data.message || resp.data.error || "");
           return;
         }
-        if (resp.data && resp.data === "") {
-          setErrMsg(t("Image upload failed"));
-          return;
-        }
-        const imageURL = `${Constant.apiURL}/api/file/${resp.data}`;
-        apiPut({
-          url: `/api/admin/jewellery/${dataModel.jewellery_id}`,
-          token: session?.token || "",
-          data: {
-            name: formData.name,
-            description: formData.description,
-            quantity: formData.quantity,
-            price: formData.price,
-            is_published: formData.isPublished,
-            category_id: categoriesArray[formData.categoryID.row].key,
-            gem_id: gemsArray[formData.gemID.row].key,
-            material_id: materialsArray[formData.materialID.row].key,
-            image_url: imageURL,
-          },
-          then: (resp: AxiosResponse) => {
-            if (resp.status !== 200) {
-              if (!resp.data) return;
-              setErrMsg(resp.data.message || resp.data.error || "");
-              return;
-            }
-            setShow(false);
-            onSuccess();
-          },
-          onCatch: (e: AxiosError) => setErrMsg(e.message),
-        });
+        setShow(false);
+        onSuccess();
       },
       onCatch: (e: AxiosError) => setErrMsg(e.message),
     });
@@ -349,7 +370,7 @@ export const EditJewelleryModal = ({
 
             {/* ------------- Photo */}
             <UploadPhoto
-              uploadPhoto={photo}
+              uploadPhoto={{ uri: dataModel.image_url }}
               onUploadPhoto={(v) => setPhoto(v)}
             />
             <View style={{ height: 10 }} />
