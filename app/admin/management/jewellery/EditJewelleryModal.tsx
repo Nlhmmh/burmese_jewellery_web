@@ -2,16 +2,19 @@ import { useSession } from "@/auth/ctx";
 import { MyDivider } from "@/components/Misc";
 import { ModalAction, ModalHeading, MyModal } from "@/components/Modals";
 import { SelectField, TextField } from "@/components/TextField";
-import { apiPut } from "@/utils/api";
+import { apiPostUploadFile, apiPut } from "@/utils/api";
 import { fromObjToArray, numberOnly } from "@/utils/utils";
 import { CheckBox, IndexPath } from "@ui-kitten/components";
 import { AxiosError, AxiosResponse } from "axios";
+import { ImagePickerAsset } from "expo-image-picker";
 import { t } from "i18next";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { ScrollView, View } from "react-native";
 import { HelperText } from "react-native-paper";
 import { Jewellery } from "../jewellery";
+import { UploadPhoto } from "./UploadPhoto";
+import { Constant } from "@/constants/Constant";
 
 export const EditJewelleryModal = ({
   dataModel,
@@ -47,9 +50,9 @@ export const EditJewelleryModal = ({
       categoryID: new IndexPath(0),
       gemID: new IndexPath(0),
       materialID: new IndexPath(0),
-      image: null,
     },
   });
+  const [photo, setPhoto] = useState<any>(null);
   const [errMsg, setErrMsg] = useState("");
 
   useEffect(() => {
@@ -75,6 +78,9 @@ export const EditJewelleryModal = ({
         materialsArray.findIndex((v) => v.key === dataModel.material_id)
       )
     );
+    setPhoto({
+      uri: dataModel.image_url,
+    });
   }, [dataModel]);
 
   const onClickEdit = async (formData: {
@@ -86,32 +92,52 @@ export const EditJewelleryModal = ({
     categoryID: IndexPath;
     gemID: IndexPath;
     materialID: IndexPath;
-    image: string | null;
   }) => {
     setErrMsg("");
-    apiPut({
-      url: `/api/admin/jewellery/${dataModel.jewellery_id}`,
+    if (!photo) {
+      setErrMsg(t("photo-required"));
+      return;
+    }
+    apiPostUploadFile({
+      url: "/api/file",
       token: session?.token || "",
-      data: {
-        name: formData.name,
-        description: formData.description,
-        quantity: formData.quantity,
-        price: formData.price,
-        is_published: formData.isPublished,
-        category_id: categoriesArray[formData.categoryID.row].key,
-        gem_id: gemsArray[formData.gemID.row].key,
-        material_id: materialsArray[formData.materialID.row].key,
-        image_url:
-          "https://media.tiffany.com/is/image/Tiffany/EcomItemL2/tiffany-foreverband-ring-16574635_1045538_ED_M.jpg?&op_usm=1.75,1.0,6.0&$cropN=0.1,0.1,0.8,0.8&defaultImage=NoImageAvailableInternal&&defaultImage=NoImageAvailableInternal&fmt=webp",
-      },
+      data: photo,
       then: (resp: AxiosResponse) => {
         if (resp.status !== 200) {
           if (!resp.data) return;
           setErrMsg(resp.data.message || resp.data.error || "");
           return;
         }
-        setShow(false);
-        onSuccess();
+        if (resp.data && resp.data === "") {
+          setErrMsg(t("Image upload failed"));
+          return;
+        }
+        const imageURL = `${Constant.apiURL}/api/file/${resp.data}`;
+        apiPut({
+          url: `/api/admin/jewellery/${dataModel.jewellery_id}`,
+          token: session?.token || "",
+          data: {
+            name: formData.name,
+            description: formData.description,
+            quantity: formData.quantity,
+            price: formData.price,
+            is_published: formData.isPublished,
+            category_id: categoriesArray[formData.categoryID.row].key,
+            gem_id: gemsArray[formData.gemID.row].key,
+            material_id: materialsArray[formData.materialID.row].key,
+            image_url: imageURL,
+          },
+          then: (resp: AxiosResponse) => {
+            if (resp.status !== 200) {
+              if (!resp.data) return;
+              setErrMsg(resp.data.message || resp.data.error || "");
+              return;
+            }
+            setShow(false);
+            onSuccess();
+          },
+          onCatch: (e: AxiosError) => setErrMsg(e.message),
+        });
       },
       onCatch: (e: AxiosError) => setErrMsg(e.message),
     });
@@ -319,6 +345,13 @@ export const EditJewelleryModal = ({
             {errors.materialID?.type === "required" && (
               <HelperText type="error">{t("required")}</HelperText>
             )}
+            <View style={{ height: 10 }} />
+
+            {/* ------------- Photo */}
+            <UploadPhoto
+              uploadPhoto={photo}
+              onUploadPhoto={(v) => setPhoto(v)}
+            />
             <View style={{ height: 10 }} />
           </ScrollView>
 

@@ -66,6 +66,56 @@ const callAPI = async (method: string, props: APIProps) => {
     });
 };
 
+export const apiPostFormData = async (props: APIProps) => {
+  return await axios
+    .postForm(Constant.apiURL + props.url, props.data, {
+      headers: {
+        Authorization:
+          props.token && props.token !== "" ? "Bearer " + props.token : null,
+      },
+      validateStatus: (status) => status < 500,
+    })
+    .then((resp: AxiosResponse) => {
+      if (isDebug) console.log(resp);
+      props.then(resp);
+    })
+    .catch((e: AxiosError) => {
+      console.error(e);
+      if (props.onCatch) props.onCatch(e);
+    })
+    .finally(() => {
+      if (props.onFinally) props.onFinally();
+    });
+};
+
+export const apiPostUploadFile = async (props: APIProps) => {
+  const fileData = await fetch(props.data.uri);
+  const fileBlob = await fileData.blob();
+  return await axios
+    .postForm(
+      Constant.apiURL + props.url,
+      { file: fileBlob },
+      {
+        headers: {
+          Authorization:
+            props.token && props.token !== "" ? "Bearer " + props.token : null,
+        },
+        validateStatus: (status) => status < 500,
+      }
+    )
+    .then((resp: AxiosResponse) => {
+      if (isDebug) console.log(resp);
+      props.then(resp);
+    })
+    .catch((e: AxiosError) => {
+      console.error(e);
+      if (props.onCatch) props.onCatch(e);
+    })
+    .finally(() => {
+      if (props.onFinally) props.onFinally();
+    });
+};
+
 export const apiPost = async (props: APIProps) => {
   return await callAPI("POST", props);
 };

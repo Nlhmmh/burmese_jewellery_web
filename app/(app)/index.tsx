@@ -1,9 +1,9 @@
 import { useSession } from "@/auth/ctx";
+import { MyText } from "@/components/Misc";
 import { Constant } from "@/constants/Constant";
 import { apiGet } from "@/utils/api";
 import { fromObjToArray } from "@/utils/utils";
 import { useIsFocused } from "@react-navigation/native";
-import { Text } from "@ui-kitten/components";
 import { AxiosResponse } from "axios";
 import { ResizeMode, Video } from "expo-av";
 import { t } from "i18next";
@@ -30,7 +30,7 @@ export default function HomeScreen() {
   const [items, setItems] = useState<Array<Jewellery>>([]);
   const [loading, setLoading] = useState(false);
   const [sort, setSort] = useState(Constant.sorts.desc);
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(8);
   const [page, setPage] = useState(0);
   const from = page * limit;
 
@@ -46,7 +46,7 @@ export default function HomeScreen() {
 
   const fetch = () => {
     setLoading(true);
-    let url = `/api/jewellery?offset=${from}&limit=${limit}&sort=${sort}`;
+    let url = `/api/jewellery?offset=${from}&limit=${limit}&sort=${sort}&is_published=true`;
     apiGet({
       url: url,
       token: session ? session?.token : "",
@@ -79,11 +79,11 @@ export default function HomeScreen() {
         ref={ref}
         style={{
           width: "100%",
-          height: 600,
+          height: 700,
         }}
         videoStyle={{
           width: "100%",
-          height: 600,
+          height: 700,
         }}
         source={{
           uri: "https://media.tiffany.com/is/content/tiffanydm/2024-Icons-BG-Hero-T-Video-Desktop-2",
@@ -104,16 +104,17 @@ export default function HomeScreen() {
           flexWrap: "wrap",
         }}
       >
-        {items.map((v) => (
-          <JewelleryCard data={v} />
+        {items.map((v, i) => (
+          <JewelleryCard key={i} data={v} />
         ))}
       </View>
       <View style={{ height: 100 }} />
 
       {/* ------------- Shop by Category */}
-      <Text category="h3" style={{ textAlign: "center" }}>
-        {t("shop-by-category")}
-      </Text>
+      <MyText
+        text={t("shop-by-category")}
+        style={{ textAlign: "center", fontSize: 30 }}
+      />
       <View style={{ height: 30 }} />
       <View
         style={{
@@ -127,7 +128,7 @@ export default function HomeScreen() {
           <CategoryCard key={i} cat={v.value} />
         ))}
       </View>
-      <View style={{ height: 150 }} />
+      <View style={{ height: 100 }} />
 
       <Image
         source={{
@@ -139,8 +140,13 @@ export default function HomeScreen() {
           height: 500,
         }}
       />
+      <View style={{ height: 100 }} />
 
-      <View style={{ height: 300 }} />
+      <View
+        style={{ height: 50, justifyContent: "center", alignItems: "center" }}
+      >
+        <MyText text="© Burmese Jewellery Co. Ltd. 2024" style={{}} />
+      </View>
     </ScrollView>
   );
 }

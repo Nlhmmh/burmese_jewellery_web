@@ -121,6 +121,8 @@ export default function AdminManagementUser() {
     setPage(0);
   }, [limit]);
 
+  useEffect(() => fetch(), [sort, page]);
+
   return (
     <>
       <View

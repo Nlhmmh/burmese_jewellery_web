@@ -5,13 +5,15 @@ import { Dimensions, Image, Text, View } from "react-native";
 
 export const JewelleryCard = ({ data }: { data: Jewellery }) => {
   const { width } = Dimensions.get("window");
+  const percent = 22;
   return (
     <View
       style={{
-        width: (width * 15) / 100,
-        padding: (((width * 15) / 100) * 5) / 100,
+        width: (width * percent) / 100,
+        padding: (((width * percent) / 100) * 5) / 100,
         backgroundColor: "#fbfbfb",
         borderRadius: 10,
+        marginBottom: 20,
       }}
     >
       <Image
@@ -21,7 +23,7 @@ export const JewelleryCard = ({ data }: { data: Jewellery }) => {
         resizeMode={"cover"}
         style={{
           width: "100%",
-          height: 200,
+          height: (width * percent) / 100,
         }}
       />
       <View style={{ height: 20 }} />

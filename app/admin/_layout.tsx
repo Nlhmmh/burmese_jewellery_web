@@ -2,7 +2,7 @@ import { AdminNavBar } from "@/app/admin/AdminNavBar";
 import { useSession } from "@/auth/ctx";
 import { Constant } from "@/constants/Constant";
 import { Redirect, Slot, usePathname } from "expo-router";
-import { Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { Card } from "react-native-paper";
 import { AdminSideDrawer } from "./AdminSideDrawer";
 
@@ -29,18 +29,19 @@ export default function AdminLayout() {
     <View style={{ backgroundColor: "white", flex: 1 }}>
       <AdminNavBar />
       <View style={{ height: 5 }} />
-      <View style={{ flexDirection: "row", height: "100%" }}>
+      <View style={{ flexDirection: "row" }}>
         <AdminSideDrawer />
-        <Card
+        <View style={{ width: 5 }} />
+        <ScrollView
           style={{
             flex: 1,
+            height: 900,
             backgroundColor: "white",
-            height: "100%",
             padding: 5,
           }}
         >
           <Slot />
-        </Card>
+        </ScrollView>
       </View>
     </View>
   );

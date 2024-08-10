@@ -103,7 +103,7 @@ export default function AdminManagementAdminUserScreen() {
     setPage(0);
   }, [limit]);
 
-  useEffect(() => fetch(), [sort]);
+  useEffect(() => fetch(), [sort, page]);
 
   return (
     <>

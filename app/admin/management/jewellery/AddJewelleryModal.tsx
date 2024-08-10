@@ -2,7 +2,8 @@ import { useSession } from "@/auth/ctx";
 import { MyDivider } from "@/components/Misc";
 import { ModalAction, ModalHeading, MyModal } from "@/components/Modals";
 import { SelectField, TextField } from "@/components/TextField";
-import { apiPost } from "@/utils/api";
+import { Constant } from "@/constants/Constant";
+import { apiPost, apiPostUploadFile } from "@/utils/api";
 import { fromObjToArray, numberOnly } from "@/utils/utils";
 import { CheckBox, IndexPath } from "@ui-kitten/components";
 import { AxiosError, AxiosResponse } from "axios";
@@ -46,11 +47,10 @@ export const AddJewelleryModal = ({
       categoryID: new IndexPath(0),
       gemID: new IndexPath(0),
       materialID: new IndexPath(0),
-      image: null,
     },
   });
+  const [photo, setPhoto] = useState<ImagePicker.ImagePickerAsset | null>(null);
   const [errMsg, setErrMsg] = useState("");
-  const [photo, setPhoto] = useState(null);
 
   const onClickAdd = async (formData: {
     name: string;
@@ -61,51 +61,56 @@ export const AddJewelleryModal = ({
     categoryID: IndexPath;
     gemID: IndexPath;
     materialID: IndexPath;
-    image: string | null;
   }) => {
     setErrMsg("");
-    apiPost({
-      url: "/api/admin/jewellery",
+    if (!photo) {
+      setErrMsg(t("photo-required"));
+      return;
+    }
+    apiPostUploadFile({
+      url: "/api/file",
       token: session?.token || "",
-      data: {
-        name: formData.name,
-        description: formData.description,
-        quantity: formData.quantity,
-        price: formData.price,
-        is_published: formData.isPublished,
-        category_id: categoriesArray[formData.categoryID.row].key,
-        gem_id: gemsArray[formData.gemID.row].key,
-        material_id: materialsArray[formData.materialID.row].key,
-        image_url:
-          "https://media.tiffany.com/is/image/Tiffany/EcomBrowseM/tiffany-tsmile-pendant-33637179_958193_ED_M.jpg?defaultImage=NoImageAvailableInternal&fmt=webp",
-      },
+      data: photo,
       then: (resp: AxiosResponse) => {
         if (resp.status !== 200) {
           if (!resp.data) return;
           setErrMsg(resp.data.message || resp.data.error || "");
           return;
         }
-        setShow(false);
-        reset();
-        onSuccess();
+        if (resp.data && resp.data === "") {
+          setErrMsg(t("Image upload failed"));
+          return;
+        }
+        const imageURL = `${Constant.apiURL}/api/file/${resp.data}`;
+        apiPost({
+          url: "/api/admin/jewellery",
+          token: session?.token || "",
+          data: {
+            name: formData.name,
+            description: formData.description,
+            quantity: formData.quantity,
+            price: formData.price,
+            is_published: formData.isPublished,
+            category_id: categoriesArray[formData.categoryID.row].key,
+            gem_id: gemsArray[formData.gemID.row].key,
+            material_id: materialsArray[formData.materialID.row].key,
+            image_url: imageURL,
+          },
+          then: (resp: AxiosResponse) => {
+            if (resp.status !== 200) {
+              if (!resp.data) return;
+              setErrMsg(resp.data.message || resp.data.error || "");
+              return;
+            }
+            setShow(false);
+            reset();
+            onSuccess();
+          },
+          onCatch: (e: AxiosError) => setErrMsg(e.message),
+        });
       },
       onCatch: (e: AxiosError) => setErrMsg(e.message),
     });
-  };
-
-  const pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    console.log(result);
-
-    if (!result.canceled && result.assets.length > 0) {
-      setPhoto(result.assets[0]);
-    }
   };
 
   return (
@@ -316,7 +321,10 @@ export const AddJewelleryModal = ({
             <View style={{ height: 10 }} />
 
             {/* ------------- Photo */}
-            <UploadPhoto onUploadPhoto={(v) => setPhoto(v)} />
+            <UploadPhoto
+              uploadPhoto={null}
+              onUploadPhoto={(v) => setPhoto(v)}
+            />
             <View style={{ height: 10 }} />
           </ScrollView>
 

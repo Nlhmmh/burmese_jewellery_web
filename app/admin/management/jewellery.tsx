@@ -11,7 +11,7 @@ import { AxiosError, AxiosResponse } from "axios";
 import { t } from "i18next";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { Clipboard, Image, Text, View } from "react-native";
+import { Clipboard, Image, ScrollView, Text, View } from "react-native";
 import { DataTable } from "react-native-paper";
 import { AddJewelleryModal } from "./jewellery/AddJewelleryModal";
 import { DeleteJewelleryModal } from "./jewellery/DeleteJewelleryModal";
@@ -138,7 +138,7 @@ export default function AdminManagementJewelleryScreen() {
     setPage(0);
   }, [limit]);
 
-  useEffect(() => fetch(), [sort]);
+  useEffect(() => fetch(), [sort, page]);
 
   return (
     <>
