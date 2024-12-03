@@ -1,5 +1,3 @@
-GO_GENERATE_FILE := $(CURDIR)/generate/generate.go
-
 .PHONY: help
 help: ## Help
 	@echo 'Usage:'

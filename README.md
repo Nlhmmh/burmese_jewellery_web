@@ -3,16 +3,20 @@ Burmese Jewellery Website
 
 ---
 
+## Documentation
+- [Confluence](https://naylinhtet.atlassian.net/wiki/spaces/BJ1/overview)
+- [Jira](https://naylinhtet.atlassian.net/jira/software/projects/BJ/boards/4/timeline)
+- [Postman](https://orange-moon-6960.postman.co/workspace/Burmese-Jewellery~fc558fc1-9818-4d2a-8307-4cbfb453797a/overview)
+- [Swagger](https://htmlpreview.github.io/?https://github.com/Nlhmmh/burmese_jewellery_server/blob/dev/swagger/static/index.html)
+
 ## Development
 - Run Server
 ```
 make run
 ```
+
 ### Framework
 React Expo
-### Documentation
-- https://naylinhtet.atlassian.net/wiki/spaces/BJ1/pages/7045123/Page+List
-- https://orange-moon-6960.postman.co/workspace/Burmese-Jewellery~fc558fc1-9818-4d2a-8307-4cbfb453797a/overview
 ### UI Library
 https://akveo.github.io/react-native-ui-kitten/docs/components/components-overview <-- **InUse**
 https://callstack.github.io/react-native-paper/docs/guides/getting-started/
