@@ -51,6 +51,7 @@ export function PasswordTextField({
   setShowPW,
   disabled = false,
   extraBody,
+  onSubmitEditing,
 }: {
   control: Control<any>;
   errors: FieldErrors;
@@ -58,6 +59,7 @@ export function PasswordTextField({
   setShowPW: (v: boolean) => void;
   disabled?: boolean;
   extraBody?: React.ReactNode;
+  onSubmitEditing?: (e: any) => void;
 }) {
   return (
     <>
@@ -80,6 +82,7 @@ export function PasswordTextField({
             onBlur={onBlur}
             disabled={disabled}
             extraBody={extraBody}
+            onSubmitEditing={onSubmitEditing}
           />
         )}
       />

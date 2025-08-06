@@ -77,6 +77,7 @@ export default function AdminLoginScreen() {
           errors={errors}
           showPW={showPW}
           setShowPW={setShowPW}
+          onSubmitEditing={handleSubmit(onClickLogin)}
         />
         <View style={{ height: 10 }} />
 

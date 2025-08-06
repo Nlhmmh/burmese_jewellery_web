@@ -71,6 +71,7 @@ export function TextFieldSecure({
   width,
   disabled = false,
   extraBody,
+  onSubmitEditing,
 }: {
   value: string;
   setValue: (v: string) => void;
@@ -82,6 +83,7 @@ export function TextFieldSecure({
   width?: DimensionValue | undefined;
   disabled?: boolean;
   extraBody?: React.ReactNode;
+  onSubmitEditing?: (e: any) => void;
 }) {
   return (
     <Input
@@ -99,6 +101,7 @@ export function TextFieldSecure({
       )}
       onBlur={onBlur}
       disabled={disabled}
+      onSubmitEditing={onSubmitEditing}
     />
   );
 }
